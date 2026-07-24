@@ -1,1 +1,403 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YAME Matcha | ระบบสั่งซื้อและจัดการออเดอร์</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Sarabun) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #f8fafc;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 flex flex-col selection:bg-emerald-500 selection:text-white">
+
+    <!-- ส่วนหัวเว็บไซต์ (Header) -->
+    <header class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-emerald-600 text-white p-2 rounded-xl">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-slate-900 tracking-wide">YAME MATCHA</h1>
+                    <p class="text-xs text-slate-500">ระบบสั่งซื้อเครื่องดื่มมัทฉะพรีเมียม</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <!-- ปุ่มเปิดดูออเดอร์ที่เข้ามา -->
+                <button onclick="openOrderModal()" class="relative bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs px-3 py-2 rounded-xl font-bold flex items-center gap-1.5 hover:bg-emerald-100 transition-all shadow-sm">
+                    <span>📋 ดูออเดอร์</span>
+                    <span id="order-badge" class="bg-emerald-600 text-white text-[10px] px-1.5 py-0.2 rounded-full">0</span>
+                </button>
+                <span class="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-semibold border border-emerald-200 hidden sm:inline-block">
+                    ● เปิดรับ
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- คอนเทนเนอร์หลัก -->
+    <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-6 grid grid-cols-1 md:grid-cols-12 gap-6">
+        
+        <!-- ฝั่งซ้าย: เลือกเมนูและความหวาน -->
+        <section class="md:col-span-7 space-y-6">
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+                <h2 class="text-base font-bold text-slate-800 border-b border-slate-100 pb-2">🍵 เลือกเมนูมัทฉะ YAME</h2>
+
+                <div class="space-y-3">
+                    <!-- เมนูที่ 1: Matcha Latte -->
+                    <div onclick="selectProduct('Matcha Latte', 45)" id="prod-0" class="p-4 rounded-xl border-2 border-emerald-500 bg-emerald-50/50 cursor-pointer transition-all flex justify-between items-center">
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-sm">Matcha Latte</h3>
+                            <p class="text-xs text-slate-500 mt-0.5">มัทฉะเข้มข้นตัดด้วยนมสดละมุน แยกชั้นสวยงาม</p>
+                        </div>
+                        <span class="font-bold text-emerald-700 text-sm">฿45</span>
+                    </div>
+
+                    <!-- เมนูที่ 2: Coconut Matcha -->
+                    <div onclick="selectProduct('Coconut Matcha', 45)" id="prod-1" class="p-4 rounded-xl border-2 border-slate-200 bg-white cursor-pointer transition-all hover:border-emerald-300 flex justify-between items-center">
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-sm">Coconut Matcha</h3>
+                            <p class="text-xs text-slate-500 mt-0.5">มัทฉะหอมเข้มผสานน้ำมะพร้าวสดชื่น</p>
+                        </div>
+                        <span class="font-bold text-emerald-700 text-sm">฿45</span>
+                    </div>
+
+                    <!-- เมนูที่ 3: Pure Matcha -->
+                    <div onclick="selectProduct('Pure Matcha', 40)" id="prod-2" class="p-4 rounded-xl border-2 border-slate-200 bg-white cursor-pointer transition-all hover:border-emerald-300 flex justify-between items-center">
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-sm">Pure Matcha</h3>
+                            <p class="text-xs text-slate-500 mt-0.5">มัทฉะแท้เพียวๆ เข้มข้นเต็มรสชาติชาเขียว</p>
+                        </div>
+                        <span class="font-bold text-emerald-700 text-sm">฿40</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ระดับความหวาน -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-3">
+                <h3 class="text-sm font-bold text-slate-800">✨ ระดับความหวาน</h3>
+                <div class="grid grid-cols-4 gap-2">
+                    <button type="button" onclick="setSweetness('0%')" id="sweet_0" class="py-2 rounded-xl border text-xs font-semibold bg-emerald-600 text-white border-emerald-600">0%</button>
+                    <button type="button" onclick="setSweetness('25%')" id="sweet_25" class="py-2 rounded-xl border text-xs font-semibold bg-white border-slate-200 text-slate-700">25%</button>
+                    <button type="button" onclick="setSweetness('50%')" id="sweet_50" class="py-2 rounded-xl border text-xs font-semibold bg-white border-slate-200 text-slate-700">50%</button>
+                    <button type="button" onclick="setSweetness('100%')" id="sweet_100" class="py-2 rounded-xl border text-xs font-semibold bg-white border-slate-200 text-slate-700">100%</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ฝั่งขวา: เลือกวันและเวลาจัดส่ง -->
+        <section class="md:col-span-5 space-y-6">
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+                <h2 class="text-base font-bold text-slate-800 border-b border-slate-100 pb-2">🚚 รอบเวลาจัดส่ง</h2>
+
+                <!-- เลือกวัน -->
+                <div class="space-y-1">
+                    <label class="block text-xs font-semibold text-slate-600">เลือกวันจัดส่ง</label>
+                    <select id="deliveryDay" onchange="onDayChange()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-800 focus:outline-none focus:border-emerald-500">
+                        <option value="Monday">วันจันทร์</option>
+                        <option value="Tuesday">วันอังคาร</option>
+                        <option value="Wednesday">วันพุธ</option>
+                        <option value="Thursday">วันพฤหัสบดี</option>
+                        <option value="Friday">วันศุกร์</option>
+                    </select>
+                </div>
+
+                <!-- เลือกเวลา -->
+                <div class="space-y-1">
+                    <label class="block text-xs font-semibold text-slate-600">เลือกรอบเวลา</label>
+                    <select id="deliverySlot" class="w-full bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2.5 text-sm font-bold text-emerald-800 focus:outline-none">
+                        <!-- อัปเดตอัตโนมัติ -->
+                    </select>
+                    <p class="text-[11px] text-amber-600 mt-1 font-medium bg-amber-50 p-2 rounded-lg border border-amber-200" id="day-rule-desc">
+                        ℹ️ วันจันทร์: ส่งก่อน 08:40 น.
+                    </p>
+                </div>
+
+                <!-- ที่อยู่ -->
+                <div class="space-y-1">
+                    <label class="block text-xs font-semibold text-slate-600">ที่อยู่จัดส่ง / เบอร์โทร</label>
+                    <textarea id="customerAddress" rows="2" placeholder="ระบุที่อยู่และเบอร์ติดต่อ..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-emerald-500"></textarea>
+                </div>
+
+                <!-- สรุปและปุ่มสั่งซื้อ -->
+                <div class="pt-3 border-t border-slate-100 space-y-2">
+                    <div class="flex justify-between text-xs text-slate-500">
+                        <span>เมนู: <strong id="summary-product" class="text-slate-800">Matcha Latte</strong></span>
+                        <span>หวาน: <strong id="summary-sweet" class="text-slate-800">0%</strong></span>
+                    </div>
+                    <div class="flex justify-between items-center text-sm font-bold text-slate-900 pt-1">
+                        <span>ยอดรวม:</span>
+                        <span id="summary-price" class="text-emerald-700 text-base">฿45</span>
+                    </div>
+
+                    <button onclick="submitOrder()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition-all text-sm mt-1">
+                        ยืนยันการสั่งซื้อ YAME
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ป๊อปอัพแสดงรายการออเดอร์ -->
+    <div id="orderModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[80vh] flex flex-col border border-slate-100">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 class="font-bold text-slate-900 text-base flex items-center gap-2">
+                    <span>📋</span> รายการออเดอร์ใหม่ทั้งหมด (<span id="modal-count">0</span>)
+                </h3>
+                <div class="flex items-center gap-2">
+                    <!-- ปุ่มปลดล็อกโหมดแอดมินเพื่อลบออเดอร์ -->
+                    <button id="admin-toggle-btn" onclick="toggleAdminMode()" class="text-emerald-700 hover:bg-emerald-50 text-xs font-bold border border-emerald-300 px-3 py-1.5 rounded-xl transition-all">
+                        ⚙️ โหมดจัดการ
+                    </button>
+                    <button onclick="closeOrderModal()" class="text-slate-400 hover:text-slate-700 text-xs font-bold bg-slate-100 px-3 py-1.5 rounded-xl">ปิด</button>
+                </div>
+            </div>
+            
+            <div id="order-list-container" class="overflow-y-auto space-y-3 flex-grow pr-1">
+                <div class="text-center py-10 text-slate-400 text-xs">ยังไม่มีออเดอร์ในระบบ</div>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 text-center">
+                <p class="text-[11px] text-slate-400">ออเดอร์ทั้งหมดจะแสดงที่หน้านี้เมื่อมีลูกค้ากดสั่งซื้อครับ</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- แจ้งเตือน Toast -->
+    <div id="toastMessage" class="fixed bottom-6 right-6 bg-slate-900 text-white text-xs px-5 py-3 rounded-xl shadow-lg transition-all translate-y-20 opacity-0 pointer-events-none">
+        บันทึกออเดอร์สำเร็จ!
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        let currentOrder = {
+            name: "Matcha Latte",
+            price: 45,
+            sweetness: "0%"
+        };
+
+        let orders = [];
+        let isAdminMode = false; // ตัวแปรเช็คสถานะแอดมิน (เริ่มต้นเป็น false ลูกค้าทั่วไปจะลบไม่ได้)
+
+        function selectProduct(name, price) {
+            currentOrder.name = name;
+            currentOrder.price = price;
+
+            ['Matcha Latte', 'Coconut Matcha', 'Pure Matcha'].forEach((mName, idx) => {
+                const card = document.getElementById(`prod-${idx}`);
+                if (mName === name) {
+                    card.className = "p-4 rounded-xl border-2 border-emerald-500 bg-emerald-50/50 cursor-pointer transition-all flex justify-between items-center";
+                } else {
+                    card.className = "p-4 rounded-xl border-2 border-slate-200 bg-white cursor-pointer transition-all hover:border-emerald-300 flex justify-between items-center";
+                }
+            });
+
+            document.getElementById('summary-product').textContent = name;
+            document.getElementById('summary-price').textContent = `฿${price}`;
+        }
+
+        function setSweetness(sweet) {
+            currentOrder.sweetness = sweet;
+            ['0', '25', '50', '100'].forEach(lvl => {
+                const btn = document.getElementById(`sweet_${lvl}`);
+                if (sweet === `${lvl}%`) {
+                    btn.className = "py-2 rounded-xl border text-xs font-semibold bg-emerald-600 text-white border-emerald-600";
+                } else {
+                    btn.className = "py-2 rounded-xl border text-xs font-semibold bg-white border-slate-200 text-slate-700";
+                }
+            });
+            document.getElementById('summary-sweet').textContent = sweet;
+        }
+
+        function onDayChange() {
+            const day = document.getElementById('deliveryDay').value;
+            const slot = document.getElementById('deliverySlot');
+            const desc = document.getElementById('day-rule-desc');
+
+            slot.innerHTML = '';
+
+            if (day === 'Monday') {
+                addOption(slot, 'mon-1', '🌅 รอบเช้า (ก่อน 08:40 น.)');
+                desc.textContent = "ℹ️ วันจันทร์: จัดส่งเฉพาะตอนเช้าก่อน 08:40 น.";
+            } else if (day === 'Tuesday') {
+                addOption(slot, 'tue-1', '🌅 รอบเช้า (ก่อนเที่ยง)');
+                addOption(slot, 'tue-2', '☀️ รอบบ่าย (13:00 - 15:30 น.)');
+                desc.textContent = "ℹ️ วันอังคาร: จัดส่ง 2 ช่วงเวลา (เช้า และ 13:00 - 15:30 น.)";
+            } else if (day === 'Wednesday') {
+                addOption(slot, 'wed-1', '🌅 รอบเช้า (ก่อน 08:20 น.)');
+                addOption(slot, 'wed-2', '☀️ รอบกลางวัน-บ่าย (ส่งตลอดวัน ไม่เกิน 15:00 น.)');
+                desc.textContent = "ℹ️ วันพุธ: รอบเช้าก่อน 08:20 น. และส่งได้ทั้งวันไม่เกิน 15:00 น.";
+            } else if (day === 'Thursday') {
+                addOption(slot, 'thu-1', '🌅 รอบเช้า (ก่อนเที่ยง 08:00 - 11:30 น.)');
+                desc.textContent = "ℹ️ วันพฤหัสบดี: จัดส่งเฉพาะตอนเช้า (ก่อนเที่ยง)";
+            } else if (day === 'Friday') {
+                addOption(slot, 'fri-1', '🌅 รอบเช้า (ก่อนเที่ยง 08:00 - 11:30 น.)');
+                desc.textContent = "ℹ️ วันศุกร์: จัดส่งเฉพาะตอนเช้า (ก่อนเที่ยง)";
+            }
+        }
+
+        function addOption(select, val, text) {
+            const opt = document.createElement('option');
+            opt.value = val;
+            opt.textContent = text;
+            select.appendChild(opt);
+        }
+
+        function playAlertSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(900, audioCtx.currentTime + 0.15);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.5);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.5);
+            } catch (e) {}
+        }
+
+        function submitOrder() {
+            const address = document.getElementById('customerAddress').value.trim();
+            if (!address) {
+                showToast("⚠️ กรุณากรอกที่อยู่และเบอร์โทรศัพท์");
+                return;
+            }
+
+            const dayText = document.getElementById('deliveryDay').selectedOptions[0].text;
+            const slotText = document.getElementById('deliverySlot').selectedOptions[0].text;
+
+            const newOrder = {
+                id: '#' + Math.floor(1000 + Math.random() * 9000),
+                product: currentOrder.name,
+                price: currentOrder.price,
+                sweetness: currentOrder.sweetness,
+                day: dayText,
+                slot: slotText,
+                address: address,
+                time: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })
+            };
+
+            orders.unshift(newOrder);
+            updateOrderBadge();
+            renderOrders();
+
+            playAlertSound();
+            showToast("🛎️ มีออเดอร์ใหม่เข้ามาแล้ว!");
+            openOrderModal();
+
+            document.getElementById('customerAddress').value = '';
+        }
+
+        function updateOrderBadge() {
+            document.getElementById('order-badge').textContent = orders.length;
+        }
+
+        // ฟังก์ชันสลับโหมดแอดมิน (ใส่รหัสผ่าน)
+        function toggleAdminMode() {
+            if (!isAdminMode) {
+                let password = prompt("กรุณากรอกรหัสผ่านผู้ดูแลระบบ:");
+                // * กำหนดรหัสผ่านตรงนี้ (เปลี่ยนคำว่า "1234" เป็นรหัสผ่านที่คุณต้องการ) *
+                if (password === "1234") { 
+                    isAdminMode = true;
+                    showToast("🔓 เข้าสู่โหมดแอดมินสำเร็จ");
+                } else if (password !== null) {
+                    showToast("❌ รหัสผ่านไม่ถูกต้อง");
+                }
+            } else {
+                isAdminMode = false;
+                showToast("🔒 ออกจากโหมดแอดมินแล้ว");
+            }
+            renderOrders(); // วาดหน้าจอใหม่เพื่อให้ปุ่มลบแสดง/ซ่อน
+        }
+
+        // ฟังก์ชันลบออเดอร์ทีละรายการ
+        function deleteOrder(index) {
+            if (confirm("คุณต้องการลบออเดอร์นี้ใช่หรือไม่?")) {
+                orders.splice(index, 1); // ตัดออเดอร์ตำแหน่งนั้นออก
+                updateOrderBadge();
+                renderOrders();
+                showToast("🗑️ ลบออเดอร์เรียบร้อยแล้ว");
+            }
+        }
+
+        function renderOrders() {
+            const container = document.getElementById('order-list-container');
+            document.getElementById('modal-count').textContent = orders.length;
+            
+            const btnToggle = document.getElementById('admin-toggle-btn');
+            if (isAdminMode) {
+                btnToggle.textContent = "🔓 ออกจากโหมดจัดการ";
+                btnToggle.className = "text-white bg-emerald-600 hover:bg-emerald-700 text-xs font-bold px-3 py-1.5 rounded-xl transition-all";
+            } else {
+                btnToggle.textContent = "⚙️ โหมดจัดการ";
+                btnToggle.className = "text-emerald-700 hover:bg-emerald-50 text-xs font-bold border border-emerald-300 px-3 py-1.5 rounded-xl transition-all";
+            }
+
+            if (orders.length === 0) {
+                container.innerHTML = `<div class="text-center py-10 text-slate-400 text-xs">ยังไม่มีออเดอร์ในระบบ</div>`;
+                return;
+            }
+
+            container.innerHTML = orders.map((ord, index) => `
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col gap-1.5 shadow-sm relative">
+                    <div class="flex justify-between items-center text-xs border-b border-slate-200 pb-1.5">
+                        <span class="font-bold text-emerald-700">ออเดอร์ ${ord.id}</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-slate-400">เวลา: ${ord.time}</span>
+                            <!-- ปุ่มลบ จะแสดงก็ต่อเมื่อเปิดโหมดแอดมิน (isAdminMode = true) เท่านั้น -->
+                            ${isAdminMode ? `<button onclick="deleteOrder(${index})" class="bg-red-500 hover:bg-red-600 text-white text-[10px] px-2 py-1 rounded-lg font-bold transition-all">🗑️ ลบ</button>` : ''}
+                        </div>
+                    </div>
+                    <div class="text-xs text-slate-700 space-y-1">
+                        <div><strong>เมนู:</strong> ${ord.product} (฿${ord.price}) - หวาน ${ord.sweetness}</div>
+                        <div><strong>รอบส่ง:</strong> ${ord.day} (${ord.slot})</div>
+                        <div><strong>ที่อยู่:</strong> ${ord.address}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openOrderModal() {
+            document.getElementById('orderModal').classList.remove('hidden');
+        }
+
+        function closeOrderModal() {
+            document.getElementById('orderModal').classList.add('hidden');
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toastMessage');
+            toast.textContent = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+                toast.classList.remove('translate-y-0', 'opacity-100');
+            }, 3000);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            onDayChange();
+        });
+    </script>
+</body>
+</html>
 
