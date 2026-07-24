@@ -48,8 +48,8 @@
     </header>
 
     <!-- แจ้งเตือนกรณีปิดทำการ / วันหยุด -->
-    <div id="closed-banner" class="hidden bg-emerald-900 text-emerald-100 text-center py-3 px-4 text-xs font-bold shadow-inner border-b border-emerald-700">
-        ☕ ขณะนี้ตรงกับวันหยุดนักขัตฤกษ์ หรือวันหยุดไม่มีการเรียนการสอน ระบบปิดรับออเดอร์ชั่วคราว ขออภัยในความไม่สะดวกครับ 🙏
+    <div id="closed-banner" class="hidden bg-red-950 text-red-200 text-center py-3 px-4 text-xs font-bold shadow-inner border-b border-red-900">
+        ⚠️ ไม่ใช่เวลาทำการ / วันหยุด: ระบบปิดรับออเดอร์ชั่วคราว ขออภัยในความไม่สะดวกครับ 🙏
     </div>
 
     <!-- คอนเทนเนอร์หลัก -->
@@ -103,7 +103,7 @@
             </div>
         </section>
 
-        <!-- ฝั่งขวา: เลือกวันและเวลาจัดส่ง + แนบสลิป -->
+        <!-- ฝั่งขวา: เลือกวันและเวลาจัดส่ง + พร้อมเพย์ -->
         <section class="md:col-span-5 space-y-6">
             <div class="bg-[#121a17]/90 rounded-2xl p-5 shadow-xl border border-emerald-950/80 space-y-4">
                 <h2 class="text-base font-bold text-white border-b border-emerald-950 pb-2 flex items-center gap-2">
@@ -122,17 +122,17 @@
                     </select>
                 </div>
 
-                <!-- เลือกเวลาจากตัวเลือกที่กำหนดให้ (ใช้งานง่าย ไม่สับสน) -->
+                <!-- เลือกรอบเวลา (ห่างกัน 10 นาที) -->
                 <div class="space-y-1">
-                    <label class="block text-xs font-semibold text-zinc-400">เลือกรอบเวลาที่ต้องการรับ</label>
+                    <label class="block text-xs font-semibold text-zinc-400">เลือกรอบเวลาที่ต้องการรับ (ห่างกัน 10 นาที)</label>
                     <select id="timeSlotSelect" class="w-full bg-[#182420] border border-emerald-600/50 rounded-xl px-3 py-2.5 text-sm font-bold text-emerald-300 focus:outline-none focus:border-emerald-500">
-                        <!-- จะถูกเติมข้อมูลอัตโนมัติด้วย JavaScript -->
+                        <!-- ถูกสร้างอัตโนมัติรอบละ 10 นาที -->
                     </select>
                     
                     <div class="bg-emerald-950/40 border border-emerald-900/50 p-2.5 rounded-xl mt-1 text-[11px] text-emerald-300 font-bold flex items-start gap-1.5">
                         <span class="text-sm">ℹ️</span>
                         <div>
-                            <span>เวลาทำการของวันนี้:</span>
+                            <span>ช่วงเวลาทำการของวันนี้:</span>
                             <span id="day-rule-desc" class="block text-emerald-200 font-extrabold mt-0.5">กำลังโหลดรอบเวลา...</span>
                         </div>
                     </div>
@@ -144,21 +144,18 @@
                     <textarea id="customerAddress" rows="2" placeholder="ระบุที่อยู่และเบอร์ติดต่อ..." class="w-full bg-[#182420] border border-emerald-900/50 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 placeholder-zinc-500"></textarea>
                 </div>
 
-                <!-- ช่องทางชำระเงิน & QR Code ตามรูปที่ให้มา -->
-                <div class="space-y-2 bg-[#0d1412] p-3 rounded-xl border border-emerald-950 text-center">
+                <!-- ช่องทางชำระเงิน พร้อมเพย์ -->
+                <div class="space-y-2 bg-[#0d1412] p-3.5 rounded-xl border border-emerald-950 text-center">
                     <div class="flex justify-between items-center text-xs font-bold text-emerald-400 mb-1">
-                        <span>💳 สแกน QR เพื่อโอนเงิน</span>
+                        <span>💳 พร้อมเพย์ (PromptPay)</span>
                         <span>฿<span id="qr-price">45</span></span>
                     </div>
-                    
-                    <!-- แสดงรูป QR PromptPay ที่แนบมา -->
-                    <div class="bg-white p-2 rounded-xl inline-block shadow-md">
-                        <img src="1000027013.jpg" alt="QR PromptPay" class="w-36 h-auto mx-auto rounded-lg">
-                    </div>
 
-                    <div class="text-[11px] text-zinc-300 mt-1">
-                        ชื่อบัญชี: <b class="text-white">นาย ภาณุวัฒน์ มะเอียง</b><br>
-                        <span class="text-emerald-400">รับเงินได้จากทุกธนาคาร (PromptPay)</span>
+                    <!-- แสดงข้อมูลพร้อมเพย์แบบตัวหนังสือเข้าใจง่าย -->
+                    <div class="bg-[#141d1a] p-3 rounded-xl border border-emerald-900/40 space-y-1">
+                        <p class="text-xs text-zinc-400">โอนผ่านเบอร์พร้อมเพย์:</p>
+                        <p class="text-lg font-extrabold text-white tracking-wider">081-004-9822</p>
+                        <p class="text-xs text-emerald-300">ชื่อบัญชี: <strong class="text-white">ภาณุวัฒน์</strong></p>
                     </div>
 
                     <div class="space-y-1 text-left mt-2">
@@ -244,29 +241,30 @@
         let orders = [];
         let isAdminMode = false;
 
-        // กำหนดรอบเวลาแบบเข้าใจง่ายให้เลือกผ่าน Dropdown
         const timeRules = {
-            'Monday': { 
-                text: '07:40 - 08:20 น.', 
-                slots: ['07:40 น.', '08:00 น.', '08:20 น.'] 
-            },
-            'Tuesday': { 
-                text: '07:40 - 12:30 น.', 
-                slots: ['07:40 น.', '09:00 น.', '10:30 น.', '12:00 น.', '12:30 น.'] 
-            },
-            'Wednesday': { 
-                text: '07:40 - 08:20 น.', 
-                slots: ['07:40 น.', '08:00 น.', '08:20 น.'] 
-            },
-            'Thursday': { 
-                text: '07:00 - 08:40 น.', 
-                slots: ['07:00 น.', '07:30 น.', '08:00 น.', '08:40 น.'] 
-            },
-            'Friday': { 
-                text: '07:40 - 11:30 น.', 
-                slots: ['07:40 น.', '09:00 น.', '10:00 น.', '11:30 น.'] 
-            }
+            'Monday': { start: '07:40', end: '08:20', text: '07:40 - 08:20 น.' },
+            'Tuesday': { start: '07:40', end: '12:30', text: '07:40 - 12:30 น.' },
+            'Wednesday': { start: '07:40', end: '08:20', text: '07:40 - 08:20 น.' },
+            'Thursday': { start: '07:00', end: '08:40', text: '07:00 - 08:40 น.' },
+            'Friday': { start: '07:40', end: '11:30', text: '07:40 - 11:30 น.' }
         };
+
+        function generateTimeSlots(startStr, endStr) {
+            let slots = [];
+            let [startH, startM] = startStr.split(':').map(Number);
+            let [endH, endM] = endStr.split(':').map(Number);
+
+            let currentMinutes = startH * 60 + startM;
+            let endMinutes = endH * 60 + endM;
+
+            while (currentMinutes <= endMinutes) {
+                let h = Math.floor(currentMinutes / 60).toString().padStart(2, '0');
+                let m = (currentMinutes % 60).toString().padStart(2, '0');
+                slots.push(`${h}:${m} น.`);
+                currentMinutes += 10;
+            }
+            return slots;
+        }
 
         function selectProduct(name, price) {
             currentOrder.name = name;
@@ -310,7 +308,8 @@
                 const rule = timeRules[day];
                 desc.textContent = rule.text;
                 
-                rule.slots.forEach(time => {
+                const generatedSlots = generateTimeSlots(rule.start, rule.end);
+                generatedSlots.forEach(time => {
                     const opt = document.createElement('option');
                     opt.value = time;
                     opt.textContent = time;
@@ -364,7 +363,7 @@
                 badge.textContent = `● ปิดทำการ`;
                 badge.className = "px-3 py-1 bg-red-950 text-red-300 rounded-full text-xs font-semibold border border-red-800 hidden sm:inline-block";
                 banner.classList.remove('hidden');
-                banner.textContent = `⚠️ ประกาศ: ${holidayReason} ระบบปิดรับออเดอร์ชั่วคราว ขออภัยครับ 🙏`;
+                banner.textContent = `⚠️ แจ้งเตือน: ${holidayReason} ระบบปิดรับออเดอร์ชั่วคราว ขออภัยครับ 🙏`;
                 submitBtn.disabled = true;
                 submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
             } else {
@@ -546,4 +545,3 @@
     </script>
 </body>
 </html>
-
