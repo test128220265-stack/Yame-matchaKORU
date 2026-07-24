@@ -40,6 +40,9 @@
                     <span>📋 ออเดอร์ของคุณ</span>
                     <span id="order-badge" class="bg-emerald-600 text-white text-[10px] px-1.5 py-0.2 rounded-full font-extrabold">0</span>
                 </button>
+                <button onclick="promptShopSettings()" class="bg-[#182420] border border-emerald-800/60 text-emerald-400 hover:bg-emerald-950 text-xs px-3 py-2 rounded-xl font-bold transition-all flex items-center gap-1 shadow-sm">
+                    ⚙️ ตั้งค่าร้าน
+                </button>
                 <span id="shop-status-badge" class="px-3 py-1 rounded-full text-xs font-semibold border hidden sm:inline-block">
                     ● กำลังตรวจสอบ...
                 </span>
@@ -47,9 +50,9 @@
         </div>
     </header>
 
-    <!-- แจ้งเตือนกรณีปิดทำการ / วันหยุด -->
+    <!-- แจ้งเตือนกรณีปิดทำการ / วันหยุด หรือ ปิดร้านแบบแมนนวล -->
     <div id="closed-banner" class="hidden bg-red-950 text-red-200 text-center py-3 px-4 text-xs font-bold shadow-inner border-b border-red-900">
-        ⚠️ ไม่ใช่เวลาทำการ / วันหยุด: ระบบปิดรับออเดอร์ชั่วคราว ขออภัยในความไม่สะดวกครับ 🙏
+        ⚠️ วันนี้ร้านปิด: ระบบปิดรับออเดอร์ชั่วคราว ขออภัยในความไม่สะดวกครับ 🙏
     </div>
 
     <!-- คอนเทนเนอร์หลัก -->
@@ -103,7 +106,7 @@
             </div>
         </section>
 
-        <!-- ฝั่งขวา: เลือกวันและเวลาจัดส่ง + พร้อมเพย์ -->
+        <!-- ฝั่งขวา: เลือกวันและเวลาจัดส่ง + พร้อมเพย์พร้อมปุ่มคัดลอก -->
         <section class="md:col-span-5 space-y-6">
             <div class="bg-[#121a17]/90 rounded-2xl p-5 shadow-xl border border-emerald-950/80 space-y-4">
                 <h2 class="text-base font-bold text-white border-b border-emerald-950 pb-2 flex items-center gap-2">
@@ -144,17 +147,22 @@
                     <textarea id="customerAddress" rows="2" placeholder="ระบุที่อยู่และเบอร์ติดต่อ..." class="w-full bg-[#182420] border border-emerald-900/50 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 placeholder-zinc-500"></textarea>
                 </div>
 
-                <!-- ช่องทางชำระเงิน พร้อมเพย์ -->
+                <!-- ช่องทางชำระเงิน พร้อมเพย์ + ปุ่มคัดลอก -->
                 <div class="space-y-2 bg-[#0d1412] p-3.5 rounded-xl border border-emerald-950 text-center">
                     <div class="flex justify-between items-center text-xs font-bold text-emerald-400 mb-1">
                         <span>💳 พร้อมเพย์ (PromptPay)</span>
                         <span>฿<span id="qr-price">45</span></span>
                     </div>
 
-                    <!-- แสดงข้อมูลพร้อมเพย์แบบตัวหนังสือเข้าใจง่าย -->
-                    <div class="bg-[#141d1a] p-3 rounded-xl border border-emerald-900/40 space-y-1">
+                    <!-- แสดงข้อมูลพร้อมเพย์ + ปุ่มคัดลอก -->
+                    <div class="bg-[#141d1a] p-3 rounded-xl border border-emerald-900/40 space-y-2">
                         <p class="text-xs text-zinc-400">โอนผ่านเบอร์พร้อมเพย์:</p>
-                        <p class="text-lg font-extrabold text-white tracking-wider">081-004-9822</p>
+                        <div class="flex items-center justify-center gap-2">
+                            <span id="promptpay-number" class="text-base font-extrabold text-white tracking-wider">0810049822</span>
+                            <button type="button" onclick="copyPromptPay()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold px-3 py-1.5 rounded-lg transition-all shadow-md flex items-center gap-1">
+                                📋 คัดลอกเบอร์
+                            </button>
+                        </div>
                         <p class="text-xs text-emerald-300">ชื่อบัญชี: <strong class="text-white">ภาณุวัฒน์</strong></p>
                     </div>
 
@@ -240,13 +248,15 @@
 
         let orders = [];
         let isAdminMode = false;
+        let isManuallyClosed = localStorage.getItem('kuro_manual_closed') === 'true';
 
+        // ปรับเวลาเริ่มต้นเป็น 08:00 ทั้งหมด
         const timeRules = {
-            'Monday': { start: '07:40', end: '08:20', text: '07:40 - 08:20 น.' },
-            'Tuesday': { start: '07:40', end: '12:30', text: '07:40 - 12:30 น.' },
-            'Wednesday': { start: '07:40', end: '08:20', text: '07:40 - 08:20 น.' },
-            'Thursday': { start: '07:00', end: '08:40', text: '07:00 - 08:40 น.' },
-            'Friday': { start: '07:40', end: '11:30', text: '07:40 - 11:30 น.' }
+            'Monday': { start: '08:00', end: '08:20', text: '08:00 - 08:20 น.' },
+            'Tuesday': { start: '08:00', end: '12:30', text: '08:00 - 12:30 น.' },
+            'Wednesday': { start: '08:00', end: '08:20', text: '08:00 - 08:20 น.' },
+            'Thursday': { start: '08:00', end: '08:40', text: '08:00 - 08:40 น.' },
+            'Friday': { start: '08:00', end: '11:30', text: '08:00 - 11:30 น.' }
         };
 
         function generateTimeSlots(startStr, endStr) {
@@ -264,6 +274,37 @@
                 currentMinutes += 10;
             }
             return slots;
+        }
+
+        // ฟังก์ชันคัดลอกเบอร์พร้อมเพย์
+        function copyPromptPay() {
+            const phoneNumber = document.getElementById('promptpay-number').textContent;
+            navigator.clipboard.writeText(phoneNumber).then(() => {
+                showToast("📋 คัดลอกเบอร์พร้อมเพย์เรียบร้อยแล้ว!");
+            }).catch(err => {
+                showToast("❌ ไม่สามารถคัดลอกได้");
+            });
+        }
+
+        // ฟังก์ชันตั้งค่าเปิด-ปิดร้านผ่านรหัสผ่าน
+        function promptShopSettings() {
+            let password = prompt("กรุณากรอกรหัสผ่านเพื่อตั้งค่าร้าน:");
+            if (password === "0871599837") {
+                let currentStatusText = isManuallyClosed ? "ปัจจุบัน: ร้านปิดอยู่ (วันนี้ร้านปิด)" : "ปัจจุบัน: ร้านเปิดปกติ";
+                let action = confirm(`${currentStatusText}\n\nคุณต้องการสลับสถานะเปิด/ปิดร้านหรือไม่?\n(กด OK เพื่อสลับสถานะ / กด Cancel เพื่อออก)`);
+                if (action) {
+                    isManuallyClosed = !isManuallyClosed;
+                    localStorage.setItem('kuro_manual_closed', isManuallyClosed);
+                    checkShopStatus();
+                    if (isManuallyClosed) {
+                        showToast("🔒 ตั้งค่า: ปิดร้านเรียบร้อยแล้ว (วันนี้ร้านปิด)");
+                    } else {
+                        showToast("🔓 ตั้งค่า: เปิดร้านเรียบร้อยแล้ว");
+                    }
+                }
+            } else if (password !== null) {
+                showToast("❌ รหัสผ่านไม่ถูกต้อง");
+            }
         }
 
         function selectProduct(name, price) {
@@ -324,6 +365,12 @@
             const month = now.getMonth() + 1; 
             const date = now.getDate(); 
 
+            // ตรวจสอบเงื่อนไข ปิดรับออเดอร์ก่อนเวลา 07:30 น. (ถ้าเวลาปัจจุบันน้อยกว่า 07:30 น. ในวันทำการ ให้ถือว่ายังไม่เปิดรับออเดอร์)
+            const currentHours = now.getHours();
+            const currentMinutes = now.getMinutes();
+            const totalCurrentMinutes = currentHours * 60 + currentMinutes;
+            const cutoffMinutes = 7 * 60 + 30; // 07:30 น.
+
             const badge = document.getElementById('shop-status-badge');
             const banner = document.getElementById('closed-banner');
             const submitBtn = document.getElementById('submit-btn');
@@ -331,39 +378,46 @@
             let isHoliday = false;
             let holidayReason = "";
 
-            if (dayOfWeek === 0 || dayOfWeek === 6) {
+            if (isManuallyClosed) {
                 isHoliday = true;
-                holidayReason = "ไม่ใช่เวลาทำการ (วันหยุดสุดสัปดาห์)";
+                holidayReason = "วันนี้ร้านปิด";
+            } else if (dayOfWeek === 0 || dayOfWeek === 6) {
+                isHoliday = true;
+                holidayReason = "วันนี้ร้านปิด (วันหยุดสุดสัปดาห์)";
+            } else if (totalCurrentMinutes < cutoffMinutes) {
+                // ปิดรับออเดอร์ก่อน 07:30 น.
+                isHoliday = true;
+                holidayReason = "ปิดรับออเดอร์ก่อน 07:30 น.";
+            } else {
+                const holidays = [
+                    { m: 1, d: 1, name: "วันขึ้นปีใหม่" },
+                    { m: 4, d: 6, name: "วันจักรี" },
+                    { m: 4, d: 13, name: "วันสงกรานต์" },
+                    { m: 4, d: 14, name: "วันสงกรานต์" },
+                    { m: 4, d: 15, name: "วันสงกรานต์" },
+                    { m: 5, d: 4, name: "วันฉัตรมงคล" },
+                    { m: 7, d: 28, name: "วันเฉลิมพระชนมพรรษา" },
+                    { m: 8, d: 12, name: "วันแม่แห่งชาติ" },
+                    { m: 10, d: 13, name: "วันนวมินทรมหาราช" },
+                    { m: 10, d: 23, name: "วันปิยมหาราช" },
+                    { m: 12, d: 5, name: "วันพ่อแห่งชาติ" },
+                    { m: 12, d: 10, name: "วันรัฐธรรมนูญ" },
+                    { m: 12, d: 31, name: "วันสิ้นปี" }
+                ];
+
+                holidays.forEach(h => {
+                    if (month === h.m && date === h.d) {
+                        isHoliday = true;
+                        holidayReason = `วันนี้ร้านปิด (${h.name})`;
+                    }
+                });
             }
 
-            const holidays = [
-                { m: 1, d: 1, name: "วันขึ้นปีใหม่" },
-                { m: 4, d: 6, name: "วันจักรี" },
-                { m: 4, d: 13, name: "วันสงกรานต์" },
-                { m: 4, d: 14, name: "วันสงกรานต์" },
-                { m: 4, d: 15, name: "วันสงกรานต์" },
-                { m: 5, d: 4, name: "วันฉัตรมงคล" },
-                { m: 7, d: 28, name: "วันเฉลิมพระชนมพรรษา" },
-                { m: 8, d: 12, name: "วันแม่แห่งชาติ" },
-                { m: 10, d: 13, name: "วันนวมินทรมหาราช" },
-                { m: 10, d: 23, name: "วันปิยมหาราช" },
-                { m: 12, d: 5, name: "วันพ่อแห่งชาติ" },
-                { m: 12, d: 10, name: "วันรัฐธรรมนูญ" },
-                { m: 12, d: 31, name: "วันสิ้นปี" }
-            ];
-
-            holidays.forEach(h => {
-                if (month === h.m && date === h.d) {
-                    isHoliday = true;
-                    holidayReason = `ไม่ใช่เวลาทำการ (${h.name})`;
-                }
-            });
-
             if (isHoliday) {
-                badge.textContent = `● ปิดทำการ`;
+                badge.textContent = `● วันนี้ร้านปิด`;
                 badge.className = "px-3 py-1 bg-red-950 text-red-300 rounded-full text-xs font-semibold border border-red-800 hidden sm:inline-block";
                 banner.classList.remove('hidden');
-                banner.textContent = `⚠️ แจ้งเตือน: ${holidayReason} ระบบปิดรับออเดอร์ชั่วคราว ขออภัยครับ 🙏`;
+                banner.textContent = `⚠️ วันนี้ร้านปิด: ระบบปิดรับออเดอร์ชั่วคราว ขออภัยในความไม่สะดวกครับ 🙏`;
                 submitBtn.disabled = true;
                 submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
             } else {
