@@ -63,25 +63,25 @@
                 </h2>
 
                 <div class="space-y-3">
-                    <div onclick="selectProduct('Matcha Latte', 45)" id="prod-0" class="p-4 rounded-xl border-2 border-emerald-500 bg-emerald-950/30 cursor-pointer transition-all flex justify-between items-center shadow-md">
+                    <div onclick="selectProduct('Matcha Latte (มัทฉะลาเต้)', 45)" id="prod-0" class="p-4 rounded-xl border-2 border-emerald-500 bg-emerald-950/30 cursor-pointer transition-all flex justify-between items-center shadow-md">
                         <div>
-                            <h3 class="font-bold text-white text-sm">Matcha Latte</h3>
+                            <h3 class="font-bold text-white text-sm">Matcha Latte <span class="text-emerald-400 font-normal">/ มัทฉะลาเต้</span></h3>
                             <p class="text-xs text-zinc-400 mt-0.5">Swirled creamy matcha with premium milk</p>
                         </div>
                         <span class="font-bold text-emerald-400 text-sm">฿45</span>
                     </div>
 
-                    <div onclick="selectProduct('Coconut Matcha', 45)" id="prod-1" class="p-4 rounded-xl border-2 border-emerald-950 bg-[#121a17]/50 cursor-pointer transition-all hover:border-emerald-600/50 flex justify-between items-center">
+                    <div onclick="selectProduct('Coconut Matcha (มัทฉะมะพร้าว)', 45)" id="prod-1" class="p-4 rounded-xl border-2 border-emerald-950 bg-[#121a17]/50 cursor-pointer transition-all hover:border-emerald-600/50 flex justify-between items-center">
                         <div>
-                            <h3 class="font-bold text-white text-sm">Coconut Matcha</h3>
+                            <h3 class="font-bold text-white text-sm">Coconut Matcha <span class="text-emerald-400 font-normal">/ มัทฉะมะพร้าว</span></h3>
                             <p class="text-xs text-zinc-400 mt-0.5">Authentic layered fresh coconut water & pure matcha</p>
                         </div>
                         <span class="font-bold text-emerald-400 text-sm">฿45</span>
                     </div>
 
-                    <div onclick="selectProduct('Pure Matcha', 40)" id="prod-2" class="p-4 rounded-xl border-2 border-emerald-950 bg-[#121a17]/50 cursor-pointer transition-all hover:border-emerald-600/50 flex justify-between items-center">
+                    <div onclick="selectProduct('Pure Matcha (เพียวมัทฉะ)', 40)" id="prod-2" class="p-4 rounded-xl border-2 border-emerald-950 bg-[#121a17]/50 cursor-pointer transition-all hover:border-emerald-600/50 flex justify-between items-center">
                         <div>
-                            <h3 class="font-bold text-white text-sm">Pure Matcha</h3>
+                            <h3 class="font-bold text-white text-sm">Pure Matcha <span class="text-emerald-400 font-normal">/ เพียวมัทฉะ</span></h3>
                             <p class="text-xs text-zinc-400 mt-0.5">A traditional, deep, pure matcha whisked to perfection</p>
                         </div>
                         <span class="font-bold text-emerald-400 text-sm">฿40</span>
@@ -122,17 +122,18 @@
                     </select>
                 </div>
 
-                <!-- ระบุเวลาที่ต้องการ (ล็อกช่วงเวลาอัตโนมัติ) -->
+                <!-- เลือกเวลาจากตัวเลือกที่กำหนดให้ (ใช้งานง่าย ไม่สับสน) -->
                 <div class="space-y-1">
-                    <label class="block text-xs font-semibold text-zinc-400">ระบุเวลาที่ต้องการรับ</label>
-                    <input type="time" id="customTimeInput" class="w-full bg-emerald-950/30 border border-emerald-600/50 rounded-xl px-3 py-2 text-sm font-bold text-emerald-300 focus:outline-none focus:border-emerald-500">
+                    <label class="block text-xs font-semibold text-zinc-400">เลือกรอบเวลาที่ต้องการรับ</label>
+                    <select id="timeSlotSelect" class="w-full bg-[#182420] border border-emerald-600/50 rounded-xl px-3 py-2.5 text-sm font-bold text-emerald-300 focus:outline-none focus:border-emerald-500">
+                        <!-- จะถูกเติมข้อมูลอัตโนมัติด้วย JavaScript -->
+                    </select>
                     
-                    <!-- ปรับข้อความเตือนให้ชัดเจนและเด่นชัดขึ้น -->
-                    <div class="bg-rose-950/40 border border-rose-900/50 p-2.5 rounded-xl mt-1 text-[11px] text-rose-300 font-bold flex items-start gap-1.5">
-                        <span class="text-sm">⚠️</span>
+                    <div class="bg-emerald-950/40 border border-emerald-900/50 p-2.5 rounded-xl mt-1 text-[11px] text-emerald-300 font-bold flex items-start gap-1.5">
+                        <span class="text-sm">ℹ️</span>
                         <div>
-                            <span>บังคับเลือกเวลาในรอบเท่านั้น:</span>
-                            <span id="day-rule-desc" class="block text-rose-200 font-extrabold mt-0.5">07:40 - 08:20 น.</span>
+                            <span>เวลาทำการของวันนี้:</span>
+                            <span id="day-rule-desc" class="block text-emerald-200 font-extrabold mt-0.5">กำลังโหลดรอบเวลา...</span>
                         </div>
                     </div>
                 </div>
@@ -143,16 +144,24 @@
                     <textarea id="customerAddress" rows="2" placeholder="ระบุที่อยู่และเบอร์ติดต่อ..." class="w-full bg-[#182420] border border-emerald-900/50 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 placeholder-zinc-500"></textarea>
                 </div>
 
-                <!-- ช่องทางชำระเงิน & แนบสลิป -->
-                <div class="space-y-2 bg-[#0d1412] p-3 rounded-xl border border-emerald-950">
-                    <div class="flex justify-between items-center text-xs font-bold text-emerald-400">
-                        <span>💳 ชำระเงินผ่าน QR PromptPay</span>
+                <!-- ช่องทางชำระเงิน & QR Code ตามรูปที่ให้มา -->
+                <div class="space-y-2 bg-[#0d1412] p-3 rounded-xl border border-emerald-950 text-center">
+                    <div class="flex justify-between items-center text-xs font-bold text-emerald-400 mb-1">
+                        <span>💳 สแกน QR เพื่อโอนเงิน</span>
                         <span>฿<span id="qr-price">45</span></span>
                     </div>
-                    <div class="text-[11px] text-zinc-300 bg-[#121a17] p-2 rounded-lg border border-emerald-950 text-center">
-                        โอนพร้อมเพย์: <b class="text-emerald-400">087-159-9837</b> (KURO MATCHA)
+                    
+                    <!-- แสดงรูป QR PromptPay ที่แนบมา -->
+                    <div class="bg-white p-2 rounded-xl inline-block shadow-md">
+                        <img src="1000027013.jpg" alt="QR PromptPay" class="w-36 h-auto mx-auto rounded-lg">
                     </div>
-                    <div class="space-y-1">
+
+                    <div class="text-[11px] text-zinc-300 mt-1">
+                        ชื่อบัญชี: <b class="text-white">นาย ภาณุวัฒน์ มะเอียง</b><br>
+                        <span class="text-emerald-400">รับเงินได้จากทุกธนาคาร (PromptPay)</span>
+                    </div>
+
+                    <div class="space-y-1 text-left mt-2">
                         <label class="block text-[11px] font-semibold text-zinc-400">แนบสลิปโอนเงิน (จำเป็น)</label>
                         <input type="file" id="slipFile" accept="image/*" class="w-full text-xs text-zinc-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-600 file:text-white hover:file:bg-emerald-500 cursor-pointer">
                     </div>
@@ -161,7 +170,7 @@
                 <!-- สรุปและปุ่มสั่งซื้อ -->
                 <div class="pt-2 border-t border-emerald-950 space-y-2">
                     <div class="flex justify-between text-xs text-zinc-400">
-                        <span>เมนู: <strong id="summary-product" class="text-white">Matcha Latte</strong></span>
+                        <span>เมนู: <strong id="summary-product" class="text-white">Matcha Latte (มัทฉะลาเต้)</strong></span>
                         <span>หวาน: <strong id="summary-sweet" class="text-white">0%</strong></span>
                     </div>
                     <div class="flex justify-between items-center text-sm font-bold text-white pt-1">
@@ -227,7 +236,7 @@
     <!-- JavaScript -->
     <script>
         let currentOrder = {
-            name: "Matcha Latte",
+            name: "Matcha Latte (มัทฉะลาเต้)",
             price: 45,
             sweetness: "0%"
         };
@@ -235,19 +244,35 @@
         let orders = [];
         let isAdminMode = false;
 
+        // กำหนดรอบเวลาแบบเข้าใจง่ายให้เลือกผ่าน Dropdown
         const timeRules = {
-            'Monday': { start: '07:40', end: '08:20', text: '07:40 - 08:20 น.' },
-            'Tuesday': { start: '07:40', end: '12:30', text: '07:40 - 12:30 น.' },
-            'Wednesday': { start: '07:40', end: '08:20', text: '07:40 - 08:20 น.' },
-            'Thursday': { start: '07:00', end: '08:40', text: '07:00 - 08:40 น.' },
-            'Friday': { start: '07:40', end: '11:30', text: '07:40 - 11:30 น.' }
+            'Monday': { 
+                text: '07:40 - 08:20 น.', 
+                slots: ['07:40 น.', '08:00 น.', '08:20 น.'] 
+            },
+            'Tuesday': { 
+                text: '07:40 - 12:30 น.', 
+                slots: ['07:40 น.', '09:00 น.', '10:30 น.', '12:00 น.', '12:30 น.'] 
+            },
+            'Wednesday': { 
+                text: '07:40 - 08:20 น.', 
+                slots: ['07:40 น.', '08:00 น.', '08:20 น.'] 
+            },
+            'Thursday': { 
+                text: '07:00 - 08:40 น.', 
+                slots: ['07:00 น.', '07:30 น.', '08:00 น.', '08:40 น.'] 
+            },
+            'Friday': { 
+                text: '07:40 - 11:30 น.', 
+                slots: ['07:40 น.', '09:00 น.', '10:00 น.', '11:30 น.'] 
+            }
         };
 
         function selectProduct(name, price) {
             currentOrder.name = name;
             currentOrder.price = price;
 
-            ['Matcha Latte', 'Coconut Matcha', 'Pure Matcha'].forEach((mName, idx) => {
+            ['Matcha Latte (มัทฉะลาเต้)', 'Coconut Matcha (มัทฉะมะพร้าว)', 'Pure Matcha (เพียวมัทฉะ)'].forEach((mName, idx) => {
                 const card = document.getElementById(`prod-${idx}`);
                 if (mName === name) {
                     card.className = "p-4 rounded-xl border-2 border-emerald-500 bg-emerald-950/30 cursor-pointer transition-all flex justify-between items-center shadow-md";
@@ -277,14 +302,20 @@
         function onDayChange() {
             const day = document.getElementById('deliveryDay').value;
             const desc = document.getElementById('day-rule-desc');
-            const timeInput = document.getElementById('customTimeInput');
+            const slotSelect = document.getElementById('timeSlotSelect');
+
+            slotSelect.innerHTML = "";
 
             if (timeRules[day]) {
                 const rule = timeRules[day];
                 desc.textContent = rule.text;
-                timeInput.min = rule.start;
-                timeInput.max = rule.end;
-                timeInput.value = rule.start;
+                
+                rule.slots.forEach(time => {
+                    const opt = document.createElement('option');
+                    opt.value = time;
+                    opt.textContent = time;
+                    slotSelect.appendChild(opt);
+                });
             }
         }
 
@@ -303,7 +334,7 @@
 
             if (dayOfWeek === 0 || dayOfWeek === 6) {
                 isHoliday = true;
-                holidayReason = "วันหยุดสุดสัปดาห์";
+                holidayReason = "ไม่ใช่เวลาทำการ (วันหยุดสุดสัปดาห์)";
             }
 
             const holidays = [
@@ -325,15 +356,15 @@
             holidays.forEach(h => {
                 if (month === h.m && date === h.d) {
                     isHoliday = true;
-                    holidayReason = h.name;
+                    holidayReason = `ไม่ใช่เวลาทำการ (${h.name})`;
                 }
             });
 
             if (isHoliday) {
-                badge.textContent = `● ปิดทำการ (${holidayReason})`;
+                badge.textContent = `● ปิดทำการ`;
                 badge.className = "px-3 py-1 bg-red-950 text-red-300 rounded-full text-xs font-semibold border border-red-800 hidden sm:inline-block";
                 banner.classList.remove('hidden');
-                banner.textContent = `🏫 ประกาศหยุดทำการ (${holidayReason}): ระบบปิดรับออเดอร์ชั่วคราว ขออภัยครับ 🙏`;
+                banner.textContent = `⚠️ ประกาศ: ${holidayReason} ระบบปิดรับออเดอร์ชั่วคราว ขออภัยครับ 🙏`;
                 submitBtn.disabled = true;
                 submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
             } else {
@@ -364,23 +395,17 @@
 
         function submitOrder() {
             const address = document.getElementById('customerAddress').value.trim();
-            const customTime = document.getElementById('customTimeInput').value;
+            const timeSlot = document.getElementById('timeSlotSelect').value;
             const slipFile = document.getElementById('slipFile').files[0];
-            const day = document.getElementById('deliveryDay').value;
+            const dayText = document.getElementById('deliveryDay').selectedOptions[0].text;
 
             if (!address) {
                 showToast("⚠️ กรุณากรอกที่อยู่และเบอร์โทรศัพท์");
                 return;
             }
 
-            if (!customTime) {
-                showToast("⚠️ กรุณาระบุเวลาที่ต้องการรับสินค้า");
-                return;
-            }
-
-            const rule = timeRules[day];
-            if (customTime < rule.start || customTime > rule.end) {
-                showToast(`⚠️ เวลาไม่ถูกต้อง! ต้องอยู่ในช่วง ${rule.text} เท่านั้น`);
+            if (!timeSlot) {
+                showToast("⚠️ กรุณาเลือกรอบเวลาที่ต้องการรับสินค้า");
                 return;
             }
 
@@ -390,7 +415,6 @@
             }
 
             const slipUrl = URL.createObjectURL(slipFile);
-            const dayText = document.getElementById('deliveryDay').selectedOptions[0].text;
 
             const newOrder = {
                 id: '#' + Math.floor(1000 + Math.random() * 9000),
@@ -398,7 +422,7 @@
                 price: currentOrder.price,
                 sweetness: currentOrder.sweetness,
                 day: dayText,
-                timeSlot: customTime,
+                timeSlot: timeSlot,
                 address: address,
                 slip: slipUrl,
                 time: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })
@@ -474,7 +498,7 @@
                     </div>
                     <div class="text-xs text-zinc-300 space-y-1">
                         <div><strong>เมนู:</strong> ${ord.product} (฿${ord.price}) - หวาน ${ord.sweetness}</div>
-                        <div><strong>รอบส่ง:</strong> ${ord.day} (เวลา ${ord.timeSlot} น.)</div>
+                        <div><strong>รอบส่ง:</strong> ${ord.day} (เวลา ${ord.timeSlot})</div>
                         <div><strong>ที่อยู่:</strong> ${ord.address}</div>
                         <div class="pt-1">
                             <strong>สลิปโอนเงิน:</strong><br>
