@@ -50,15 +50,19 @@
         </div>
     </header>
 
-    <!-- แจ้งเตือนกรณีปิดทำการ / วันหยุด หรือ ปิดร้านแบบแมนนวล -->
-    <div id="closed-banner" class="hidden bg-red-950 text-red-200 text-center py-3 px-4 text-xs font-bold shadow-inner border-b border-red-900">
-        ⚠️ วันนี้ร้านปิด: ระบบปิดรับออเดอร์ชั่วคราว ขออภัยในความไม่สะดวกครับ 🙏
+    <!-- แจ้งเตือนกรณีปิดทำการ -->
+    <div id="closed-banner" class="hidden bg-gradient-to-r from-red-950 via-red-900 to-red-950 text-white text-center py-6 px-6 shadow-2xl border-b-4 border-red-600">
+        <div class="max-w-xl mx-auto space-y-2">
+            <span class="text-4xl">🚨</span>
+            <h2 class="text-2xl font-black tracking-wide text-red-200">วันนี้ร้านปิด</h2>
+            <p class="text-sm text-red-300 font-medium">ระบบปิดรับออเดอร์ชั่วคราวในขณะนี้ ขออภัยในความไม่สะดวกครับ 🙏</p>
+        </div>
     </div>
 
     <!-- คอนเทนเนอร์หลัก -->
     <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-6 grid grid-cols-1 md:grid-cols-12 gap-6">
         
-        <!-- ฝั่งซ้าย: เลือกเมนูและความหวาน -->
+        <!-- ฝั่งซ้าย: เลือกเมนูและความหวาน + ปุ่มเพิ่มลงตะกร้า -->
         <section class="md:col-span-7 space-y-6">
             <div class="bg-[#121a17]/90 rounded-2xl p-5 shadow-xl border border-emerald-950/80 space-y-4">
                 <h2 class="text-base font-bold text-white border-b border-emerald-950 pb-2 flex items-center gap-2">
@@ -103,6 +107,22 @@
                     <button type="button" onclick="setSweetness('50%')" id="sweet_50" class="py-2 rounded-xl border text-xs font-semibold bg-[#182420] border-emerald-950 text-zinc-300">50%</button>
                     <button type="button" onclick="setSweetness('100%')" id="sweet_100" class="py-2 rounded-xl border text-xs font-semibold bg-[#182420] border-emerald-950 text-zinc-300">100%</button>
                 </div>
+
+                <!-- ปุ่มเพิ่มแก้วนี้ลงในรายการ -->
+                <button type="button" onclick="addCurrentItemToCart()" class="w-full py-2.5 bg-[#182420] hover:bg-emerald-950 text-emerald-400 border border-emerald-600/50 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-sm mt-2">
+                    <span>➕</span> เพิ่มแก้วนี้ลงในรายการสั่งซื้อ
+                </button>
+            </div>
+
+            <!-- รายการแก้วที่เลือกในออเดอร์นี้ -->
+            <div class="bg-[#121a17]/90 rounded-2xl p-5 shadow-xl border border-emerald-950/80 space-y-3">
+                <h3 class="text-sm font-bold text-white flex items-center justify-between">
+                    <span class="flex items-center gap-2"><span class="text-emerald-500">🛒</span> รายการสินค้าในออเดอร์นี้</span>
+                    <span id="cart-count-badge" class="bg-emerald-900/60 text-emerald-300 text-xs px-2 py-0.5 rounded-full font-bold">0 แก้ว</span>
+                </h3>
+                <div id="cart-items-container" class="space-y-2 max-h-40 overflow-y-auto pr-1">
+                    <div class="text-center py-4 text-zinc-500 text-xs">ยังไม่มีสินค้า (กดปุ่มเพิ่มแก้วด้านบนได้เลย)</div>
+                </div>
             </div>
         </section>
 
@@ -125,11 +145,10 @@
                     </select>
                 </div>
 
-                <!-- เลือกรอบเวลา (ห่างกัน 10 นาที) -->
+                <!-- เลือกรอบเวลา -->
                 <div class="space-y-1">
                     <label class="block text-xs font-semibold text-zinc-400">เลือกรอบเวลาที่ต้องการรับ (ห่างกัน 10 นาที)</label>
                     <select id="timeSlotSelect" class="w-full bg-[#182420] border border-emerald-600/50 rounded-xl px-3 py-2.5 text-sm font-bold text-emerald-300 focus:outline-none focus:border-emerald-500">
-                        <!-- ถูกสร้างอัตโนมัติรอบละ 10 นาที -->
                     </select>
                     
                     <div class="bg-emerald-950/40 border border-emerald-900/50 p-2.5 rounded-xl mt-1 text-[11px] text-emerald-300 font-bold flex items-start gap-1.5">
@@ -147,14 +166,13 @@
                     <textarea id="customerAddress" rows="2" placeholder="ระบุที่อยู่และเบอร์ติดต่อ..." class="w-full bg-[#182420] border border-emerald-900/50 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 placeholder-zinc-500"></textarea>
                 </div>
 
-                <!-- ช่องทางชำระเงิน พร้อมเพย์ + ปุ่มคัดลอก -->
+                <!-- ช่องทางชำระเงิน พร้อมเพย์ -->
                 <div class="space-y-2 bg-[#0d1412] p-3.5 rounded-xl border border-emerald-950 text-center">
                     <div class="flex justify-between items-center text-xs font-bold text-emerald-400 mb-1">
                         <span>💳 พร้อมเพย์ (PromptPay)</span>
                         <span>฿<span id="qr-price">45</span></span>
                     </div>
 
-                    <!-- แสดงข้อมูลพร้อมเพย์ + ปุ่มคัดลอก -->
                     <div class="bg-[#141d1a] p-3 rounded-xl border border-emerald-900/40 space-y-2">
                         <p class="text-xs text-zinc-400">โอนผ่านเบอร์พร้อมเพย์:</p>
                         <div class="flex items-center justify-center gap-2">
@@ -174,13 +192,9 @@
 
                 <!-- สรุปและปุ่มสั่งซื้อ -->
                 <div class="pt-2 border-t border-emerald-950 space-y-2">
-                    <div class="flex justify-between text-xs text-zinc-400">
-                        <span>เมนู: <strong id="summary-product" class="text-white">Matcha Latte (มัทฉะลาเต้)</strong></span>
-                        <span>หวาน: <strong id="summary-sweet" class="text-white">0%</strong></span>
-                    </div>
                     <div class="flex justify-between items-center text-sm font-bold text-white pt-1">
-                        <span>ยอดรวมสุทธิ:</span>
-                        <span id="summary-price" class="text-emerald-400 text-base">฿45</span>
+                        <span>ยอดรวมสุทธิทั้งสิ้น:</span>
+                        <span id="summary-total-price" class="text-emerald-400 text-base">฿45</span>
                     </div>
 
                     <button id="submit-btn" onclick="submitOrder()" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white font-extrabold rounded-xl shadow-lg transition-all text-sm mt-1 border border-emerald-500/30">
@@ -240,17 +254,21 @@
 
     <!-- JavaScript -->
     <script>
-        let currentOrder = {
+        let selectedProduct = {
             name: "Matcha Latte (มัทฉะลาเต้)",
             price: 45,
             sweetness: "0%"
         };
 
+        // ตะกร้าสินค้าสำหรับออเดอร์ปัจจุบัน (รองรับการสั่งหลายแก้ว)
+        let currentCart = [
+            { name: "Matcha Latte (มัทฉะลาเต้)", price: 45, sweetness: "0%" }
+        ];
+
         let orders = [];
         let isAdminMode = false;
         let isManuallyClosed = localStorage.getItem('kuro_manual_closed') === 'true';
 
-        // ปรับเวลาเริ่มต้นเป็น 08:00 ทั้งหมด
         const timeRules = {
             'Monday': { start: '08:00', end: '08:20', text: '08:00 - 08:20 น.' },
             'Tuesday': { start: '08:00', end: '12:30', text: '08:00 - 12:30 น.' },
@@ -276,7 +294,6 @@
             return slots;
         }
 
-        // ฟังก์ชันคัดลอกเบอร์พร้อมเพย์
         function copyPromptPay() {
             const phoneNumber = document.getElementById('promptpay-number').textContent;
             navigator.clipboard.writeText(phoneNumber).then(() => {
@@ -286,18 +303,17 @@
             });
         }
 
-        // ฟังก์ชันตั้งค่าเปิด-ปิดร้านผ่านรหัสผ่าน
         function promptShopSettings() {
             let password = prompt("กรุณากรอกรหัสผ่านเพื่อตั้งค่าร้าน:");
             if (password === "0871599837") {
-                let currentStatusText = isManuallyClosed ? "ปัจจุบัน: ร้านปิดอยู่ (วันนี้ร้านปิด)" : "ปัจจุบัน: ร้านเปิดปกติ";
+                let currentStatusText = isManuallyClosed ? "ปัจจุบัน: ร้านปิดอยู่" : "ปัจจุบัน: ร้านเปิดปกติ";
                 let action = confirm(`${currentStatusText}\n\nคุณต้องการสลับสถานะเปิด/ปิดร้านหรือไม่?\n(กด OK เพื่อสลับสถานะ / กด Cancel เพื่อออก)`);
                 if (action) {
                     isManuallyClosed = !isManuallyClosed;
                     localStorage.setItem('kuro_manual_closed', isManuallyClosed);
-                    checkShopStatus();
+                    checkShopStatus(); // อัปเดตสถานะหน้าจอทันที
                     if (isManuallyClosed) {
-                        showToast("🔒 ตั้งค่า: ปิดร้านเรียบร้อยแล้ว (วันนี้ร้านปิด)");
+                        showToast("🔒 ตั้งค่า: ปิดร้านเรียบร้อยแล้ว");
                     } else {
                         showToast("🔓 ตั้งค่า: เปิดร้านเรียบร้อยแล้ว");
                     }
@@ -308,8 +324,8 @@
         }
 
         function selectProduct(name, price) {
-            currentOrder.name = name;
-            currentOrder.price = price;
+            selectedProduct.name = name;
+            selectedProduct.price = price;
 
             ['Matcha Latte (มัทฉะลาเต้)', 'Coconut Matcha (มัทฉะมะพร้าว)', 'Pure Matcha (เพียวมัทฉะ)'].forEach((mName, idx) => {
                 const card = document.getElementById(`prod-${idx}`);
@@ -319,14 +335,10 @@
                     card.className = "p-4 rounded-xl border-2 border-emerald-950 bg-[#121a17]/50 cursor-pointer transition-all hover:border-emerald-600/50 flex justify-between items-center";
                 }
             });
-
-            document.getElementById('summary-product').textContent = name;
-            document.getElementById('summary-price').textContent = `฿${price}`;
-            document.getElementById('qr-price').textContent = price;
         }
 
         function setSweetness(sweet) {
-            currentOrder.sweetness = sweet;
+            selectedProduct.sweetness = sweet;
             ['0', '25', '50', '100'].forEach(lvl => {
                 const btn = document.getElementById(`sweet_${lvl}`);
                 if (sweet === `${lvl}%`) {
@@ -335,7 +347,49 @@
                     btn.className = "py-2 rounded-xl border text-xs font-semibold bg-[#182420] border-emerald-950 text-zinc-300";
                 }
             });
-            document.getElementById('summary-sweet').textContent = sweet;
+        }
+
+        function addCurrentItemToCart() {
+            currentCart.push({
+                name: selectedProduct.name,
+                price: selectedProduct.price,
+                sweetness: selectedProduct.sweetness
+            });
+            renderCart();
+            showToast(`➕ เพิ่ม ${selectedProduct.name} ลงในรายการแล้ว`);
+        }
+
+        function removeFromCart(index) {
+            if (currentCart.length === 1) {
+                showToast("⚠️ ต้องมีสินค้าอย่างน้อย 1 รายการในออเดอร์");
+                return;
+            }
+            currentCart.splice(index, 1);
+            renderCart();
+            showToast("🗑️ ลบรายการออกแล้ว");
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cart-items-container');
+            document.getElementById('cart-count-badge').textContent = `${currentCart.length} แก้ว`;
+
+            let totalPrice = 0;
+
+            container.innerHTML = currentCart.map((item, idx) => {
+                totalPrice += item.price;
+                return `
+                    <div class="bg-[#182420] border border-emerald-950 p-2.5 rounded-xl flex justify-between items-center text-xs">
+                        <div>
+                            <span class="font-bold text-white">${idx + 1}. ${item.name}</span>
+                            <div class="text-[11px] text-emerald-400">หวาน ${item.sweetness} | ฿${item.price}</div>
+                        </div>
+                        <button type="button" onclick="removeFromCart(${idx})" class="text-red-400 hover:text-red-300 font-bold px-2 py-1 bg-red-950/40 rounded-lg text-[10px]">ลบ</button>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('summary-total-price').textContent = `฿${totalPrice}`;
+            document.getElementById('qr-price').textContent = totalPrice;
         }
 
         function onDayChange() {
@@ -365,59 +419,41 @@
             const month = now.getMonth() + 1; 
             const date = now.getDate(); 
 
-            // ตรวจสอบเงื่อนไข ปิดรับออเดอร์ก่อนเวลา 07:30 น. (ถ้าเวลาปัจจุบันน้อยกว่า 07:30 น. ในวันทำการ ให้ถือว่ายังไม่เปิดรับออเดอร์)
             const currentHours = now.getHours();
             const currentMinutes = now.getMinutes();
             const totalCurrentMinutes = currentHours * 60 + currentMinutes;
-            const cutoffMinutes = 7 * 60 + 30; // 07:30 น.
+            const cutoffMinutes = 7 * 60 + 30;
 
             const badge = document.getElementById('shop-status-badge');
             const banner = document.getElementById('closed-banner');
             const submitBtn = document.getElementById('submit-btn');
 
             let isHoliday = false;
-            let holidayReason = "";
 
             if (isManuallyClosed) {
                 isHoliday = true;
-                holidayReason = "วันนี้ร้านปิด";
             } else if (dayOfWeek === 0 || dayOfWeek === 6) {
                 isHoliday = true;
-                holidayReason = "วันนี้ร้านปิด (วันหยุดสุดสัปดาห์)";
             } else if (totalCurrentMinutes < cutoffMinutes) {
-                // ปิดรับออเดอร์ก่อน 07:30 น.
                 isHoliday = true;
-                holidayReason = "ปิดรับออเดอร์ก่อน 07:30 น.";
             } else {
                 const holidays = [
-                    { m: 1, d: 1, name: "วันขึ้นปีใหม่" },
-                    { m: 4, d: 6, name: "วันจักรี" },
-                    { m: 4, d: 13, name: "วันสงกรานต์" },
-                    { m: 4, d: 14, name: "วันสงกรานต์" },
-                    { m: 4, d: 15, name: "วันสงกรานต์" },
-                    { m: 5, d: 4, name: "วันฉัตรมงคล" },
-                    { m: 7, d: 28, name: "วันเฉลิมพระชนมพรรษา" },
-                    { m: 8, d: 12, name: "วันแม่แห่งชาติ" },
-                    { m: 10, d: 13, name: "วันนวมินทรมหาราช" },
-                    { m: 10, d: 23, name: "วันปิยมหาราช" },
-                    { m: 12, d: 5, name: "วันพ่อแห่งชาติ" },
-                    { m: 12, d: 10, name: "วันรัฐธรรมนูญ" },
-                    { m: 12, d: 31, name: "วันสิ้นปี" }
+                    { m: 1, d: 1 }, { m: 4, d: 6 }, { m: 4, d: 13 }, { m: 4, d: 14 }, 
+                    { m: 4, d: 15 }, { m: 5, d: 4 }, { m: 7, d: 28 }, { m: 8, d: 12 }, 
+                    { m: 10, d: 13 }, { m: 10, d: 23 }, { m: 12, d: 5 }, { m: 12, d: 10 }, { m: 12, d: 31 }
                 ];
 
                 holidays.forEach(h => {
                     if (month === h.m && date === h.d) {
                         isHoliday = true;
-                        holidayReason = `วันนี้ร้านปิด (${h.name})`;
                     }
                 });
             }
 
             if (isHoliday) {
-                badge.textContent = `● วันนี้ร้านปิด`;
+                badge.textContent = `● ร้านปิดอยู่ (Manual/ระบบ)`;
                 badge.className = "px-3 py-1 bg-red-950 text-red-300 rounded-full text-xs font-semibold border border-red-800 hidden sm:inline-block";
                 banner.classList.remove('hidden');
-                banner.textContent = `⚠️ วันนี้ร้านปิด: ระบบปิดรับออเดอร์ชั่วคราว ขออภัยในความไม่สะดวกครับ 🙏`;
                 submitBtn.disabled = true;
                 submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
             } else {
@@ -430,6 +466,8 @@
         }
 
         function playAlertSound() {
+            if (!isAdminMode) return;
+
             try {
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 const osc = audioCtx.createOscillator();
@@ -468,12 +506,12 @@
             }
 
             const slipUrl = URL.createObjectURL(slipFile);
+            let totalAmount = currentCart.reduce((sum, item) => sum + item.price, 0);
 
             const newOrder = {
                 id: '#' + Math.floor(1000 + Math.random() * 9000),
-                product: currentOrder.name,
-                price: currentOrder.price,
-                sweetness: currentOrder.sweetness,
+                items: [...currentCart],
+                totalPrice: totalAmount,
                 day: dayText,
                 timeSlot: timeSlot,
                 address: address,
@@ -485,10 +523,14 @@
             updateOrderBadge();
             renderOrders();
 
-            playAlertSound();
+            playAlertSound(); 
             
             document.getElementById('customerAddress').value = '';
             document.getElementById('slipFile').value = '';
+            
+            // รีเซ็ตตะกร้ากลับมาเป็นค่าเริ่มต้น 1 แก้ว
+            currentCart = [{ name: "Matcha Latte (มัทฉะลาเต้)", price: 45, sweetness: "0%" }];
+            renderCart();
 
             openThankYouModal();
         }
@@ -502,13 +544,13 @@
                 let password = prompt("กรุณากรอกรหัสผ่านผู้ดูแลระบบ (เบอร์โทร):");
                 if (password === "0871599837") { 
                     isAdminMode = true;
-                    showToast("🔓 เข้าสู่โหมดแอดมินสำเร็จ");
+                    showToast("🔓 เข้าสู่โหมดแอดมินสำเร็จ (เสียงเตือนเปิดใช้งาน)");
                 } else if (password !== null) {
                     showToast("❌ รหัสผ่านไม่ถูกต้อง");
                 }
             } else {
                 isAdminMode = false;
-                showToast("🔒 ออกจากโหมดแอดมินแล้ว");
+                showToast("🔒 ออกจากโหมดแอดมินแล้ว (ปิดเสียงเตือน)");
             }
             renderOrders();
         }
@@ -543,15 +585,18 @@
             container.innerHTML = orders.map((ord, index) => `
                 <div class="bg-[#182420] border border-emerald-950 rounded-2xl p-4 flex flex-col gap-2 shadow-sm relative">
                     <div class="flex justify-between items-center text-xs border-b border-emerald-950 pb-1.5">
-                        <span class="font-bold text-emerald-400">ออเดอร์ ${ord.id}</span>
+                        <span class="font-bold text-emerald-400">ออเดอร์ ${ord.id} (ยอดรวม ฿${ord.totalPrice})</span>
                         <div class="flex items-center gap-2">
                             <span class="text-zinc-400">สั่งเมื่อ: ${ord.time}</span>
                             ${isAdminMode ? `<button onclick="deleteOrder(${index})" class="bg-red-600 hover:bg-red-500 text-white text-[10px] px-2 py-1 rounded-lg font-bold transition-all">🗑️ ลบ</button>` : ''}
                         </div>
                     </div>
                     <div class="text-xs text-zinc-300 space-y-1">
-                        <div><strong>เมนู:</strong> ${ord.product} (฿${ord.price}) - หวาน ${ord.sweetness}</div>
-                        <div><strong>รอบส่ง:</strong> ${ord.day} (เวลา ${ord.timeSlot})</div>
+                        <div><strong>รายการสินค้า:</strong></div>
+                        <ul class="list-disc list-inside pl-1 space-y-0.5 text-emerald-200">
+                            ${ord.items.map(it => `<li>${it.name} - หวาน ${it.sweetness} (฿${it.price})</li>`).join('')}
+                        </ul>
+                        <div class="pt-1"><strong>รอบส่ง:</strong> ${ord.day} (เวลา ${ord.timeSlot})</div>
                         <div><strong>ที่อยู่:</strong> ${ord.address}</div>
                         <div class="pt-1">
                             <strong>สลิปโอนเงิน:</strong><br>
@@ -595,7 +640,9 @@
         window.addEventListener('DOMContentLoaded', () => {
             onDayChange();
             checkShopStatus();
+            renderCart();
         });
     </script>
 </body>
 </html>
+
