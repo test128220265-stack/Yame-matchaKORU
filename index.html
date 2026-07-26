@@ -94,16 +94,37 @@
                 </div>
             </div>
 
-            <!-- ระดับความหวาน -->
-            <div class="bg-white rounded-3xl p-5 shadow-sm border border-emerald-500/20 space-y-3">
-                <h3 class="text-xs font-bold text-emerald-950 flex items-center gap-2">
-                    <span class="text-amber-500 text-base font-bold">K</span> ระดับความหวาน
-                </h3>
-                <div class="grid grid-cols-4 gap-2">
-                    <button type="button" onclick="setSweetness('0%')" id="sweet_0" class="py-2.5 rounded-xl border text-xs font-bold bg-emerald-500 text-white border-emerald-500 shadow-sm">0%</button>
-                    <button type="button" onclick="setSweetness('25%')" id="sweet_25" class="py-2.5 rounded-xl border text-xs font-bold bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-emerald-50">25%</button>
-                    <button type="button" onclick="setSweetness('50%')" id="sweet_50" class="py-2.5 rounded-xl border text-xs font-bold bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-emerald-50">50%</button>
-                    <button type="button" onclick="setSweetness('100%')" id="sweet_100" class="py-2.5 rounded-xl border text-xs font-bold bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-emerald-50">100%</button>
+            <!-- ระดับความหวาน & เลือกนม -->
+            <div class="bg-white rounded-3xl p-5 shadow-sm border border-emerald-500/20 space-y-4">
+                <!-- ความหวาน -->
+                <div class="space-y-2">
+                    <h3 class="text-xs font-bold text-emerald-950 flex items-center gap-2">
+                        <span class="text-amber-500 text-base font-bold">K</span> ระดับความหวาน
+                    </h3>
+                    <div class="grid grid-cols-4 gap-2">
+                        <button type="button" onclick="setSweetness('0%')" id="sweet_0" class="py-2.5 rounded-xl border text-xs font-bold bg-emerald-500 text-white border-emerald-500 shadow-sm">0%</button>
+                        <button type="button" onclick="setSweetness('25%')" id="sweet_25" class="py-2.5 rounded-xl border text-xs font-bold bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-emerald-50">25%</button>
+                        <button type="button" onclick="setSweetness('50%')" id="sweet_50" class="py-2.5 rounded-xl border text-xs font-bold bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-emerald-50">50%</button>
+                        <button type="button" onclick="setSweetness('100%')" id="sweet_100" class="py-2.5 rounded-xl border text-xs font-bold bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-emerald-50">100%</button>
+                    </div>
+                </div>
+
+                <!-- ชนิดนม (ตัวเลือกใหม่) -->
+                <div class="space-y-2 pt-2 border-t border-zinc-100">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xs font-bold text-emerald-950 flex items-center gap-2">
+                            <span class="text-amber-500 text-base font-bold">🥛</span> ชนิดนม
+                        </h3>
+                        <span id="oat-status-text" class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">มีนมโอ๊ตให้บริการ</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button type="button" onclick="setMilk('นมสดปกติ', 0)" id="milk_normal" class="py-2.5 rounded-xl border text-xs font-bold bg-emerald-500 text-white border-emerald-500 shadow-sm">
+                            นมสดปกติ (+0฿)
+                        </button>
+                        <button type="button" onclick="setMilk('นมโอ๊ต', 5)" id="milk_oat" class="py-2.5 rounded-xl border text-xs font-bold bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-emerald-50 transition-all">
+                            🥛 นมโอ๊ต (+5฿)
+                        </button>
+                    </div>
                 </div>
 
                 <button type="button" onclick="addCurrentItemToCart()" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-md mt-2">
@@ -245,7 +266,7 @@
             </div>
 
             <div class="pt-3 border-t border-zinc-200 text-center">
-                <p class="text-[11px] text-zinc-400">💡 ข้อมูลออเดอร์จริงถูกบันทึกเข้า Google Sheets ของคุณเรียบร้อยแล้ว</p>
+                <p class="text-[11px] text-zinc-400">💡 ข้อมูลออเดอร์ถูกส่งไปยัง Google Sheets ของร้านเรียบร้อยแล้ว</p>
             </div>
         </div>
     </div>
@@ -259,13 +280,19 @@
     <script>
         let selectedProduct = {
             name: "Matcha Latte (มัทฉะลาเต้)",
+            basePrice: 45,
             price: 45,
-            sweetness: "0%"
+            sweetness: "0%",
+            milk: "นมสดปกติ",
+            milkExtra: 0
         };
 
         let currentCart = [];
         let orders = [];
         let isForceOpen = true; 
+        
+        // สถานะสต็อกนมโอ๊ต (บันทึกจำไว้ในเครื่อง)
+        let isOatMilkAvailable = JSON.parse(localStorage.getItem('kuro_oat_milk_status')) ?? true;
 
         let customTimeSlots = JSON.parse(localStorage.getItem('kuro_custom_slots')) || {
             'Monday': [], 'Tuesday': [], 'Wednesday': [], 'Thursday': [], 'Friday': []
@@ -296,23 +323,68 @@
             return slots;
         }
 
+        // ⚙️ ระบบตั้งค่าร้านแอดมิน (เพิ่มเมนูเปิด/ปิดสต็อกนมโอ๊ต)
         function promptShopSettings() {
             let password = prompt("กรุณากรอกรหัสผ่านเพื่อตั้งค่าร้าน:");
             if (password === "0871599837") {
-                let menuChoice = prompt("เลือกเมนูตั้งค่า:\n1. เปิด/ปิด ร้านกรณีพิเศษ\n2. เพิ่มรอบเวลาฉุกเฉิน\n\nพิมพ์เลข 1 หรือ 2:");
+                let oatStatusText = isOatMilkAvailable ? "🟢 เปิดขายอยู่" : "🔴 สินค้าหมด";
+                let menuChoice = prompt(`เลือกเมนูตั้งค่า:\n1. เปิด/ปิด ร้านกรณีพิเศษ\n2. เพิ่มรอบเวลาฉุกเฉิน\n3. ตั้งค่าสต็อกนมโอ๊ต (ปัจจุบัน: ${oatStatusText})\n\nพิมพ์เลข 1, 2 หรือ 3:`);
+                
                 if (menuChoice === "1") {
                     isForceOpen = !isForceOpen;
                     checkShopStatus();
                     showToast(isForceOpen ? "🔓 เปิดร้านเรียบร้อย!" : "🔒 ปิดร้านชั่วคราว");
+                } else if (menuChoice === "2") {
+                    let dayInput = prompt("เลือกวันที่จะเพิ่มรอบ (Monday - Friday):");
+                    if (['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].includes(dayInput)) {
+                        let timeInput = prompt(`เพิ่มรอบเวลาในวัน ${dayInput} (เช่น 13:00):`);
+                        if (timeInput) {
+                            let formattedTime = timeInput.includes('น.') ? timeInput : timeInput.trim() + ' น.';
+                            customTimeSlots[dayInput].push(formattedTime);
+                            localStorage.setItem('kuro_custom_slots', JSON.stringify(customTimeSlots));
+                            onDayChange();
+                            showToast(`✨ เพิ่มรอบเวลาเรียบร้อย!`);
+                        }
+                    }
+                } else if (menuChoice === "3") {
+                    isOatMilkAvailable = !isOatMilkAvailable;
+                    localStorage.setItem('kuro_oat_milk_status', JSON.stringify(isOatMilkAvailable));
+                    updateOatMilkStatusUI();
+                    showToast(isOatMilkAvailable ? "🟢 เปิดให้เลือก 'นมโอ๊ต' แล้ว!" : "🔴 ตั้งค่า 'นมโอ๊ตหมด' เรียบร้อย");
                 }
             } else if (password !== null) {
                 showToast("❌ รหัสผ่านไม่ถูกต้อง");
             }
         }
 
+        function updateOatMilkStatusUI() {
+            const btnOat = document.getElementById('milk_oat');
+            const statusText = document.getElementById('oat-status-text');
+
+            if (isOatMilkAvailable) {
+                btnOat.disabled = false;
+                btnOat.classList.remove('opacity-40', 'cursor-not-allowed');
+                btnOat.innerHTML = "🥛 นมโอ๊ต (+5฿)";
+                statusText.textContent = "มีนมโอ๊ตให้บริการ";
+                statusText.className = "text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200";
+            } else {
+                btnOat.disabled = true;
+                btnOat.classList.add('opacity-40', 'cursor-not-allowed');
+                btnOat.innerHTML = "🥛 นมโอ๊ต (หมด)";
+                statusText.textContent = "นมโอ๊ตหมดชั่วคราว";
+                statusText.className = "text-[10px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-full border border-red-200";
+                
+                if (selectedProduct.milk === 'นมโอ๊ต') {
+                    setMilk('นมสดปกติ', 0);
+                }
+            }
+        }
+
         function selectProduct(name, price) {
             selectedProduct.name = name;
-            selectedProduct.price = price;
+            selectedProduct.basePrice = price;
+            selectedProduct.price = price + selectedProduct.milkExtra;
+
             ['Matcha Latte (มัทฉะลาเต้)', 'Coconut Matcha (มัทฉะมะพร้าว)', 'Pure Matcha (เพียวมัทฉะ)'].forEach((mName, idx) => {
                 const card = document.getElementById(`prod-${idx}`);
                 if (mName === name) {
@@ -335,14 +407,37 @@
             });
         }
 
+        function setMilk(milkType, extraPrice) {
+            if (milkType === 'นมโอ๊ต' && !isOatMilkAvailable) {
+                showToast("⚠️ นมโอ๊ตหมดชั่วคราวครับ");
+                return;
+            }
+
+            selectedProduct.milk = milkType;
+            selectedProduct.milkExtra = extraPrice;
+            selectedProduct.price = selectedProduct.basePrice + extraPrice;
+
+            const btnNormal = document.getElementById('milk_normal');
+            const btnOat = document.getElementById('milk_oat');
+
+            if (milkType === 'นมสดปกติ') {
+                btnNormal.className = "py-2.5 rounded-xl border text-xs font-bold bg-emerald-500 text-white border-emerald-500 shadow-sm";
+                btnOat.className = "py-2.5 rounded-xl border text-xs font-bold bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-emerald-50";
+            } else {
+                btnOat.className = "py-2.5 rounded-xl border text-xs font-bold bg-emerald-500 text-white border-emerald-500 shadow-sm";
+                btnNormal.className = "py-2.5 rounded-xl border text-xs font-bold bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-emerald-50";
+            }
+        }
+
         function addCurrentItemToCart() {
             currentCart.push({
                 name: selectedProduct.name,
                 price: selectedProduct.price,
-                sweetness: selectedProduct.sweetness
+                sweetness: selectedProduct.sweetness,
+                milk: selectedProduct.milk
             });
             renderCart();
-            showToast(`🍵 เพิ่ม ${selectedProduct.name} ลงในตะกร้าแล้ว`);
+            showToast(`🍵 เพิ่ม ${selectedProduct.name} (${selectedProduct.milk}) ลงในตะกร้าแล้ว`);
         }
 
         function removeFromCart(index) {
@@ -365,7 +460,7 @@
                         <div class="bg-zinc-50 border border-zinc-200 p-3 rounded-xl flex justify-between items-center text-xs">
                             <div>
                                 <span class="font-bold text-emerald-950">${idx + 1}. ${item.name}</span>
-                                <div class="text-[11px] text-emerald-700 font-bold">ความหวาน ${item.sweetness} | ฿${item.price}</div>
+                                <div class="text-[11px] text-emerald-700 font-bold">หวาน ${item.sweetness} | ${item.milk} | ฿${item.price}</div>
                             </div>
                             <button type="button" onclick="removeFromCart(${idx})" class="text-red-500 hover:text-red-700 font-bold px-2.5 py-1 bg-red-50 rounded-lg text-[10px] border border-red-100">ลบ</button>
                         </div>
@@ -426,7 +521,7 @@
             }
         }
 
-        // 🌟 จุดสำคัญ: ฟังก์ชันส่งข้อมูลเข้า Google Sheets ผ่าน SheetDB
+        // 🚀 ส่งข้อมูลตรงเข้า Google Sheets ผ่าน SheetDB API ของคุณ
         function submitOrder() {
             const address = document.getElementById('customerAddress').value.trim();
             const timeSlot = document.getElementById('timeSlotSelect').value;
@@ -449,12 +544,14 @@
             }
 
             let totalAmount = currentCart.reduce((sum, item) => sum + item.price, 0);
-            let itemsDescription = currentCart.map(it => `${it.name} (หวาน ${it.sweetness})`).join(', ');
+            let itemsDescription = currentCart.map(it => `${it.name} (หวาน ${it.sweetness}, ${it.milk})`).join(', ');
 
             const newOrderData = {
                 id: '#' + Math.floor(1000 + Math.random() * 9000),
                 items: itemsDescription,
                 totalPrice: totalAmount,
+                sweetness: currentCart.map(it => it.sweetness).join(', '),
+                milk: currentCart.map(it => it.milk).join(', '),
                 day: dayText,
                 timeSlot: timeSlot,
                 address: address,
@@ -462,7 +559,7 @@
                 time: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })
             };
 
-            // ⚠️ แทนที่ 'ใส่ลิงก์ SheetDB ตรงนี้' ด้วยลิงก์ API ของคุณ (ใส่เครื่องหมาย ' ครอบไว้เหมือนเดิม)
+            // ลิงก์ API ของคุณถูกใส่ตรงนี้เรียบร้อยครับ
             fetch('https://sheetdb.io/api/v1/3z3illa11b85l', {
                 method: 'POST',
                 headers: {
@@ -537,8 +634,10 @@
         window.addEventListener('DOMContentLoaded', () => {
             onDayChange();
             checkShopStatus();
+            updateOatMilkStatusUI();
             renderCart();
         });
     </script>
 </body>
 </html>
+
