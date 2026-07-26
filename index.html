@@ -236,7 +236,7 @@
 
     </main>
 
-    <!-- 🔍 ป๊อปอัพ "เช็กออเดอร์ความถูกต้องก่อนยืนยัน" (เพิ่มใหม่) -->
+    <!-- 🔍 ป๊อปอัพ "เช็กออเดอร์ความถูกต้องก่อนยืนยัน" -->
     <div id="reviewModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 border border-emerald-500/20 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-zinc-200 pb-3">
@@ -300,12 +300,12 @@
         </div>
     </div>
 
-    <!-- ป๊อปอัพแสดงรายการออเดอร์ -->
+    <!-- ป๊อปอัพแสดงรายการออเดอร์เฉพาะของลูกค้านั้น -->
     <div id="orderModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[80vh] flex flex-col border border-emerald-500/20">
             <div class="flex justify-between items-center border-b border-zinc-200 pb-3">
                 <h3 class="font-bold text-emerald-950 text-sm flex items-center gap-2">
-                    <span>📋</span> รายการออเดอร์ในเครื่องนี้ (<span id="modal-count">0</span>)
+                    <span>📋</span> ออเดอร์ของคุณในเครื่องนี้ (<span id="modal-count">0</span>)
                 </h3>
                 <button onclick="closeOrderModal()" class="text-zinc-600 hover:text-black text-xs font-bold bg-zinc-100 px-3 py-1.5 rounded-xl">ปิด</button>
             </div>
@@ -315,7 +315,7 @@
             </div>
 
             <div class="pt-3 border-t border-zinc-200 text-center">
-                <p class="text-[11px] text-zinc-400">💡 ข้อมูลออเดอร์ถูกส่งไปยัง Google Sheets เรียบร้อยแล้ว</p>
+                <p class="text-[11px] text-zinc-400">💡 แสดงเฉพาะรายการออเดอร์ที่คุณสั่งจากเครื่องนี้เท่านั้น</p>
             </div>
         </div>
     </div>
@@ -337,7 +337,10 @@
         };
 
         let currentCart = [];
-        let orders = [];
+        
+        // โหลดเฉพาะออเดอร์ของเครื่องนี้จาก LocalStorage (ลูกค้าคนอื่นมองไม่เห็น)
+        let myOrders = JSON.parse(localStorage.getItem('kuro_my_orders')) || [];
+
         let isForceOpen = true; 
         
         let isOatMilkAvailable = JSON.parse(localStorage.getItem('kuro_oat_milk_status')) ?? true;
@@ -568,7 +571,6 @@
             }
         }
 
-        // 1️⃣ กดปุ่มเช็กความถูกต้องก่อน ให้เปิดหน้าต่าง Review ขึ้นมา
         function openReviewModal() {
             const address = document.getElementById('customerAddress').value.trim();
             const timeSlot = document.getElementById('timeSlotSelect').value;
@@ -588,7 +590,6 @@
                 return;
             }
 
-            // เติมข้อมูลลงในป๊อปอัพรีวิว
             let totalAmount = currentCart.reduce((sum, item) => sum + item.price, 0);
             const dayText = document.getElementById('deliveryDay').selectedOptions[0].text;
             const paymentMethodText = document.getElementById('paymentMethod').selectedOptions[0].text;
@@ -610,7 +611,6 @@
             document.getElementById('reviewModal').classList.add('hidden');
         }
 
-        // 2️⃣ หลังจากลูกค้ายืนยันในหน้าต่างรีวิวแล้ว ค่อยส่งข้อมูลเข้า SheetDB จริงๆ
         function confirmAndSubmitOrder() {
             closeReviewModal();
 
@@ -647,8 +647,10 @@
             .then(data => {
                 showToast("✨ สั่งซื้อสำเร็จ! บันทึกข้อมูลลง Google Sheets แล้ว");
                 
-                orders.unshift(newOrderData);
-                document.getElementById('order-badge').textContent = orders.length;
+                // บันทึกเก็บไว้เฉพาะในเครื่องของลูกค้ารายนี้เท่านั้น
+                myOrders.unshift(newOrderData);
+                localStorage.setItem('kuro_my_orders', JSON.stringify(myOrders));
+                document.getElementById('order-badge').textContent = myOrders.length;
 
                 currentCart = [];
                 renderCart();
@@ -674,19 +676,27 @@
         function openOrderModal() {
             document.getElementById('orderModal').classList.remove('hidden');
             const container = document.getElementById('order-list-container');
-            document.getElementById('modal-count').textContent = orders.length;
+            document.getElementById('modal-count').textContent = myOrders.length;
 
-            if (orders.length === 0) {
-                container.innerHTML = `<div class="text-center py-10 text-zinc-400 text-xs">ยังไม่มีออเดอร์ใหม่ในเซสชันนี้</div>`;
+            if (myOrders.length === 0) {
+                container.innerHTML = `<div class="text-center py-10 text-zinc-400 text-xs">ยังไม่มีออเดอร์ของคุณในเครื่องนี้</div>`;
                 return;
             }
 
-            container.innerHTML = orders.map((ord) => `
-                <div class="bg-zinc-50 border border-zinc-200 rounded-2xl p-3 text-xs space-y-1">
-                    <div class="font-bold text-emerald-800">ออเดอร์ ${ord.id} - ฿${ord.totalPrice}</div>
-                    <div>${ord.items}</div>
-                    <div>รอบ: ${ord.day} (${ord.timeSlot})</div>
-                    <div>ที่อยู่: ${ord.address}</div>
+            container.innerHTML = myOrders.map((ord) => `
+                <div class="bg-emerald-50/60 border border-emerald-200 rounded-2xl p-3.5 text-xs space-y-2 shadow-sm">
+                    <div class="flex justify-between items-center border-b border-emerald-200 pb-1.5">
+                        <span class="font-extrabold text-emerald-900">ออเดอร์รหัส ${ord.id}</span>
+                        <span class="bg-emerald-600 text-white font-bold px-2 py-0.5 rounded-lg text-[11px]">฿${ord.totalPrice}</span>
+                    </div>
+                    <div class="space-y-1 text-emerald-950">
+                        <p><b>☕ รายการ:</b> ${ord.items}</p>
+                        <p class="text-emerald-800 font-bold bg-white px-2.5 py-1 rounded-xl border border-emerald-200 inline-block">
+                            📅 วันจัดส่ง: ${ord.day} | ⏰ รอบเวลา: ${ord.timeSlot}
+                        </p>
+                        <p><b>📍 ที่อยู่:</b> ${ord.address}</p>
+                        <p class="text-zinc-500 text-[10px]">ชำระเงิน: ${ord.payment} (สั่งซื้อเวลา ${ord.time} น.)</p>
+                    </div>
                 </div>
             `).join('');
         }
@@ -711,7 +721,9 @@
             checkShopStatus();
             updateOatMilkStatusUI();
             renderCart();
+            document.getElementById('order-badge').textContent = myOrders.length;
         });
     </script>
 </body>
 </html>
+
