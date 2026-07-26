@@ -24,7 +24,6 @@
     <header class="bg-white/90 backdrop-blur-md border-b border-emerald-500/25 sticky top-0 z-50 shadow-sm">
         <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <!-- เอาขอบ/กรอบออก เหลือแค่ตัว K สีทองไล่เฉดเท่ๆ -->
                 <div class="text-3xl font-black bg-gradient-to-tr from-amber-600 via-yellow-500 to-amber-300 bg-clip-text text-transparent tracking-tighter drop-shadow-sm">
                     K
                 </div>
@@ -107,7 +106,6 @@
                     <button type="button" onclick="setSweetness('100%')" id="sweet_100" class="py-2.5 rounded-xl border text-xs font-bold bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-emerald-50">100%</button>
                 </div>
 
-                <!-- ปุ่มเพิ่มแก้วนี้ลงในรายการ -->
                 <button type="button" onclick="addCurrentItemToCart()" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-md mt-2">
                     <span>➕</span> เพิ่มแก้วนี้ลงในรายการสั่งซื้อ
                 </button>
@@ -227,7 +225,7 @@
                 <p id="thankyou-desc" class="text-xs text-zinc-500">ขอบคุณที่สนับสนุนมัทฉะของเรา กรุณาส่งสลิปยืนยันทาง LINE <b>@107widix</b> ทางเราจะรีบตรวจสอบครับ 🎉</p>
             </div>
             <button onclick="closeThankYouModal()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl transition-all shadow-sm">
-                ตกลง / ดูรายการออเดอร์
+                ตกลง / ปิดหน้าต่างนี้
             </button>
         </div>
     </div>
@@ -237,22 +235,17 @@
         <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[80vh] flex flex-col border border-emerald-500/20">
             <div class="flex justify-between items-center border-b border-zinc-200 pb-3">
                 <h3 class="font-bold text-emerald-950 text-sm flex items-center gap-2">
-                    <span>📋</span> รายการออเดอร์ทั้งหมด (<span id="modal-count">0</span>)
+                    <span>📋</span> รายการออเดอร์ในเครื่องนี้ (<span id="modal-count">0</span>)
                 </h3>
-                <div class="flex items-center gap-2">
-                    <button id="admin-toggle-btn" onclick="toggleAdminMode()" class="text-emerald-700 hover:bg-emerald-50 text-xs font-bold border border-emerald-300 px-3 py-1.5 rounded-xl transition-all">
-                        ⚙️ โหมดจัดการ
-                    </button>
-                    <button onclick="closeOrderModal()" class="text-zinc-600 hover:text-black text-xs font-bold bg-zinc-100 px-3 py-1.5 rounded-xl">ปิด</button>
-                </div>
+                <button onclick="closeOrderModal()" class="text-zinc-600 hover:text-black text-xs font-bold bg-zinc-100 px-3 py-1.5 rounded-xl">ปิด</button>
             </div>
             
             <div id="order-list-container" class="overflow-y-auto space-y-3 flex-grow pr-1">
-                <div class="text-center py-10 text-zinc-400 text-xs">ยังไม่มีออเดอร์ในระบบ</div>
+                <div class="text-center py-10 text-zinc-400 text-xs">ยังไม่มีออเดอร์ในเครื่องนี้</div>
             </div>
 
             <div class="pt-3 border-t border-zinc-200 text-center">
-                <p class="text-[11px] text-zinc-400">รายการออเดอร์ทั้งหมดจะแสดงที่นี่เมื่อมีลูกค้ากดสั่งซื้อ</p>
+                <p class="text-[11px] text-zinc-400">💡 ข้อมูลออเดอร์จริงถูกบันทึกเข้า Google Sheets ของคุณเรียบร้อยแล้ว</p>
             </div>
         </div>
     </div>
@@ -272,9 +265,6 @@
 
         let currentCart = [];
         let orders = [];
-        let isAdminMode = false;
-        
-        // บังคับเปิดร้านถาวรให้ลูกค้ากดสั่งได้ตลอดเวลา (แก้ปัญหาลิงก์ขึ้นร้านปิด)
         let isForceOpen = true; 
 
         let customTimeSlots = JSON.parse(localStorage.getItem('kuro_custom_slots')) || {
@@ -309,34 +299,11 @@
         function promptShopSettings() {
             let password = prompt("กรุณากรอกรหัสผ่านเพื่อตั้งค่าร้าน:");
             if (password === "0871599837") {
-                let menuChoice = prompt("เลือกเมนูตั้งค่า:\n1. เปิด/ปิด ร้านกรณีพิเศษ\n2. เพิ่มรอบเวลาฉุกเฉิน (เพิ่มคลาส/วันพิเศษ)\n\nพิมพ์เลข 1 หรือ 2:");
-                
+                let menuChoice = prompt("เลือกเมนูตั้งค่า:\n1. เปิด/ปิด ร้านกรณีพิเศษ\n2. เพิ่มรอบเวลาฉุกเฉิน\n\nพิมพ์เลข 1 หรือ 2:");
                 if (menuChoice === "1") {
-                    let currentText = isForceOpen ? "สถานะตอนนี้: เปิดร้านกรณีพิเศษอยู่" : "สถานะตอนนี้: ตามระบบเวลาปกติ";
-                    let action = confirm(`${currentText}\n\nคุณต้องการสลับสถานะเปิด/ปิดร้าน หรือไม่?\n(กด OK เพื่อสลับ / กด Cancel เพื่อยกเลิก)`);
-                    if (action) {
-                        isForceOpen = !isForceOpen;
-                        checkShopStatus();
-                        showToast(isForceOpen ? "🔓 เปิดร้านเรียบร้อย!" : "🔒 ปิดร้านชั่วคราว");
-                    }
-                } else if (menuChoice === "2") {
-                    let dayInput = prompt("เลือกวันที่จะเพิ่มรอบ (พิมพ์ภาษาอังกฤษตัวแรกตัวพิมพ์ใหญ่):\nMonday, Tuesday, Wednesday, Thursday, Friday");
-                    if (['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].includes(dayInput)) {
-                        let timeInput = prompt(`คุณต้องการเพิ่มรอบเวลาใดในวัน ${dayInput}?\n(เช่น 13:00 หรือ 15:30)`);
-                        if (timeInput) {
-                            let formattedTime = timeInput.includes('น.') ? timeInput : timeInput.trim() + ' น.';
-                            if (!customTimeSlots[dayInput].includes(formattedTime)) {
-                                customTimeSlots[dayInput].push(formattedTime);
-                                localStorage.setItem('kuro_custom_slots', JSON.stringify(customTimeSlots));
-                                onDayChange();
-                                showToast(`✨ เพิ่มรอบเวลา ${formattedTime} ในวัน ${dayInput} สำเร็จ!`);
-                            } else {
-                                showToast("⚠️ รอบเวลานี้มีอยู่แล้ว");
-                            }
-                        }
-                    } else if (dayInput !== null) {
-                        showToast("❌ ชื่อวันไม่ถูกต้อง กรุณากรอกให้ตรง เช่น Monday");
-                    }
+                    isForceOpen = !isForceOpen;
+                    checkShopStatus();
+                    showToast(isForceOpen ? "🔓 เปิดร้านเรียบร้อย!" : "🔒 ปิดร้านชั่วคราว");
                 }
             } else if (password !== null) {
                 showToast("❌ รหัสผ่านไม่ถูกต้อง");
@@ -346,7 +313,6 @@
         function selectProduct(name, price) {
             selectedProduct.name = name;
             selectedProduct.price = price;
-
             ['Matcha Latte (มัทฉะลาเต้)', 'Coconut Matcha (มัทฉะมะพร้าว)', 'Pure Matcha (เพียวมัทฉะ)'].forEach((mName, idx) => {
                 const card = document.getElementById(`prod-${idx}`);
                 if (mName === name) {
@@ -388,7 +354,6 @@
         function renderCart() {
             const container = document.getElementById('cart-items-container');
             document.getElementById('cart-count-badge').textContent = `${currentCart.length} แก้ว`;
-
             let totalPrice = 0;
 
             if (currentCart.length === 0) {
@@ -426,22 +391,18 @@
             const day = document.getElementById('deliveryDay').value;
             const desc = document.getElementById('day-rule-desc');
             const slotSelect = document.getElementById('timeSlotSelect');
-
             slotSelect.innerHTML = "";
 
             if (defaultTimeRules[day]) {
                 const rule = defaultTimeRules[day];
                 let slotText = rule.text;
-
                 let generatedSlots = generateTimeSlots(rule.start, rule.end);
                 
                 if (customTimeSlots[day] && customTimeSlots[day].length > 0) {
                     generatedSlots = generatedSlots.concat(customTimeSlots[day]);
-                    slotText += ` + รอบพิเศษ (${customTimeSlots[day].join(', ')})`;
                 }
 
                 desc.textContent = slotText;
-                
                 generatedSlots.forEach(time => {
                     const opt = document.createElement('option');
                     opt.value = time;
@@ -462,40 +423,14 @@
                 banner.classList.add('hidden');
                 submitBtn.disabled = false;
                 submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                return;
-            } else {
-                badge.textContent = "● ปิดรับออเดอร์ชั่วคราว";
-                badge.className = "px-3 py-1.5 bg-red-100 text-red-900 rounded-full text-xs font-bold border border-red-300 hidden sm:inline-block shadow-sm";
-                banner.classList.remove('hidden');
-                submitBtn.disabled = true;
-                submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
             }
         }
 
-        function playAlertSound() {
-            if (!isAdminMode) return;
-
-            try {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-                osc.frequency.setValueAtTime(900, audioCtx.currentTime + 0.15);
-                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.5);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.5);
-            } catch (e) {}
-        }
-
+        // 🌟 จุดสำคัญ: ฟังก์ชันส่งข้อมูลเข้า Google Sheets ผ่าน SheetDB
         function submitOrder() {
             const address = document.getElementById('customerAddress').value.trim();
             const timeSlot = document.getElementById('timeSlotSelect').value;
             const paymentMethod = document.getElementById('paymentMethod').value;
-            const slipFile = document.getElementById('slipFile').files[0];
             const dayText = document.getElementById('deliveryDay').selectedOptions[0].text;
 
             if (currentCart.length === 0) {
@@ -513,122 +448,47 @@
                 return;
             }
 
-            let slipUrl = "";
-            if (paymentMethod === 'qr' && slipFile) {
-                slipUrl = URL.createObjectURL(slipFile);
-            }
-
             let totalAmount = currentCart.reduce((sum, item) => sum + item.price, 0);
+            let itemsDescription = currentCart.map(it => `${it.name} (หวาน ${it.sweetness})`).join(', ');
 
-            const newOrder = {
+            const newOrderData = {
                 id: '#' + Math.floor(1000 + Math.random() * 9000),
-                items: [...currentCart],
+                items: itemsDescription,
                 totalPrice: totalAmount,
                 day: dayText,
                 timeSlot: timeSlot,
                 address: address,
                 payment: paymentMethod === 'qr' ? 'โอนผ่าน PromptPay' : 'ชำระเงินสด',
-                slip: slipUrl,
                 time: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })
             };
 
-            orders.unshift(newOrder);
-            updateOrderBadge();
-            renderOrders();
+            // ⚠️ แทนที่ 'ใส่ลิงก์ SheetDB ตรงนี้' ด้วยลิงก์ API ของคุณ (ใส่เครื่องหมาย ' ครอบไว้เหมือนเดิม)
+            fetch('https://sheetdb.io/api/v1/3z3illa11b85l', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ data: [newOrderData] })
+            })
+            .then(response => response.json())
+            .then(data => {
+                showToast("✨ สั่งซื้อสำเร็จ! บันทึกข้อมูลลง Google Sheets แล้ว");
+                
+                orders.unshift(newOrderData);
+                document.getElementById('order-badge').textContent = orders.length;
 
-            playAlertSound(); 
-            
-            document.getElementById('customerAddress').value = '';
-            document.getElementById('slipFile').value = '';
-            
-            currentCart = [];
-            renderCart();
+                currentCart = [];
+                renderCart();
+                document.getElementById('customerAddress').value = '';
+                document.getElementById('slipFile').value = '';
 
-            const thankyouDesc = document.getElementById('thankyou-desc');
-            if (paymentMethod === 'qr') {
-                thankyouDesc.innerHTML = `ขอบคุณที่สนับสนุนมัทฉะของเรา กรุณาส่งสลิปยืนยันทาง LINE <b>@107widix</b> ทางเราจะรีบตรวจสอบครับ 🎉`;
-            } else {
-                thankyouDesc.innerHTML = `ขอบคุณที่สนับสนุนมัทฉะของเรา (เลือกชำระด้วยเงินสด) ทางเราจะจัดเตรียมออเดอร์ตามรอบเวลาครับ 🎉`;
-            }
-
-            openThankYouModal();
-        }
-
-        function updateOrderBadge() {
-            document.getElementById('order-badge').textContent = orders.length;
-        }
-
-        function toggleAdminMode() {
-            if (!isAdminMode) {
-                let password = prompt("กรุณากรอกรหัสผ่านผู้ดูแลระบบ (เบอร์โทร):");
-                if (password === "0871599837") { 
-                    isAdminMode = true;
-                    showToast("🔓 เข้าสู่โหมดแอดมินสำเร็จ (เสียงเตือนเปิดใช้งาน)");
-                } else if (password !== null) {
-                    showToast("❌ รหัสผ่านไม่ถูกต้อง");
-                }
-            } else {
-                isAdminMode = false;
-                showToast("🔒 ออกจากโหมดแอดมินแล้ว (ปิดเสียงเตือน)");
-            }
-            renderOrders();
-        }
-
-        function deleteOrder(index) {
-            if (confirm("คุณต้องการลบออเดอร์นี้ใช่หรือไม่?")) {
-                orders.splice(index, 1);
-                updateOrderBadge();
-                renderOrders();
-                showToast("🗑️ ลบออเดอร์เรียบร้อยแล้ว");
-            }
-        }
-
-        function renderOrders() {
-            const container = document.getElementById('order-list-container');
-            document.getElementById('modal-count').textContent = orders.length;
-            
-            const btnToggle = document.getElementById('admin-toggle-btn');
-            if (isAdminMode) {
-                btnToggle.textContent = "🔓 ออกจากโหมดจัดการ";
-                btnToggle.className = "text-white bg-emerald-700 hover:bg-emerald-600 text-xs font-bold px-3 py-1.5 rounded-xl transition-all";
-            } else {
-                btnToggle.textContent = "⚙️ โหมดจัดการ";
-                btnToggle.className = "text-emerald-700 hover:bg-emerald-50 text-xs font-bold border border-emerald-300 px-3 py-1.5 rounded-xl transition-all";
-            }
-
-            if (orders.length === 0) {
-                container.innerHTML = `<div class="text-center py-10 text-zinc-400 text-xs">ยังไม่มีออเดอร์ในระบบ</div>`;
-                return;
-            }
-
-            container.innerHTML = orders.map((ord, index) => `
-                <div class="bg-zinc-50 border border-zinc-200 rounded-2xl p-4 flex flex-col gap-2 shadow-sm relative">
-                    <div class="flex justify-between items-center text-xs border-b border-zinc-200 pb-1.5">
-                        <span class="font-bold text-emerald-800">ออเดอร์ ${ord.id} (ยอดรวม ฿${ord.totalPrice})</span>
-                        <div class="flex items-center gap-2">
-                            <span class="text-zinc-500">สั่งเมื่อ: ${ord.time}</span>
-                            ${isAdminMode ? `<button onclick="deleteOrder(${index})" class="bg-red-500 hover:bg-red-600 text-white text-[10px] px-2 py-1 rounded-lg font-bold transition-all">🗑️ ลบ</button>` : ''}
-                        </div>
-                    </div>
-                    <div class="text-xs text-zinc-700 space-y-1">
-                        <div><strong>รายการสินค้า:</strong></div>
-                        <ul class="list-disc list-inside pl-1 space-y-0.5 text-emerald-900">
-                            ${ord.items.map(it => `<li>${it.name} - หวาน ${it.sweetness} (฿${it.price})</li>`).join('')}
-                        </ul>
-                        <div class="pt-1"><strong>รอบส่ง:</strong> ${ord.day} (เวลา ${ord.timeSlot})</div>
-                        <div><strong>ที่อยู่:</strong> ${ord.address}</div>
-                        <div><strong>การชำระเงิน:</strong> <span class="text-emerald-700 font-bold">${ord.payment}</span></div>
-                        ${ord.slip ? `
-                            <div class="pt-1">
-                                <strong>สลิปโอนเงินที่ลูกค้าแนบ:</strong><br>
-                                <a href="${ord.slip}" target="_blank" class="inline-block mt-1">
-                                    <img src="${ord.slip}" alt="สลิปโอนเงิน" class="w-20 h-20 object-cover rounded-xl border border-zinc-300 hover:opacity-80 transition-all shadow-sm">
-                                </a>
-                            </div>
-                        ` : ''}
-                    </div>
-                </div>
-            `).join('');
+                openThankYouModal();
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                showToast("❌ เกิดข้อผิดพลาดในการเชื่อมต่อ Google Sheets");
+            });
         }
 
         function openThankYouModal() {
@@ -637,11 +497,26 @@
 
         function closeThankYouModal() {
             document.getElementById('thankYouModal').classList.add('hidden');
-            openOrderModal();
         }
 
         function openOrderModal() {
             document.getElementById('orderModal').classList.remove('hidden');
+            const container = document.getElementById('order-list-container');
+            document.getElementById('modal-count').textContent = orders.length;
+
+            if (orders.length === 0) {
+                container.innerHTML = `<div class="text-center py-10 text-zinc-400 text-xs">ยังไม่มีออเดอร์ใหม่ในเซสชันนี้</div>`;
+                return;
+            }
+
+            container.innerHTML = orders.map((ord) => `
+                <div class="bg-zinc-50 border border-zinc-200 rounded-2xl p-3 text-xs space-y-1">
+                    <div class="font-bold text-emerald-800">ออเดอร์ ${ord.id} - ฿${ord.totalPrice}</div>
+                    <div>${ord.items}</div>
+                    <div>รอบ: ${ord.day} (${ord.timeSlot})</div>
+                    <div>ที่อยู่: ${ord.address}</div>
+                </div>
+            `).join('');
         }
 
         function closeOrderModal() {
@@ -667,4 +542,3 @@
     </script>
 </body>
 </html>
-
