@@ -6,44 +6,52 @@
     <title>KURO | Matcha Amour</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts (Sarabun) -->
+    <!-- Google Fonts (Sarabun & Prompt) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Sarabun', sans-serif;
-            background-color: #0b0f0e;
-            color: #e2e8f0;
+            font-family: 'Prompt', 'Sarabun', sans-serif;
+            background-color: #f4f6f3;
+            color: #2c3e35;
+        }
+        .jp-pattern {
+            background-color: #f4f6f3;
+            background-image: radial-gradient(#d1dbd3 0.75px, transparent 0.75px);
+            background-size: 16px 16px;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col selection:bg-emerald-600 selection:text-white">
+<body class="min-h-screen flex flex-col selection:bg-emerald-700 selection:text-white jp-pattern">
 
-    <!-- ส่วนหัวเว็บไซต์ (Header) -->
-    <header class="bg-[#101715]/90 backdrop-blur-md border-b border-emerald-950/60 sticky top-0 z-50">
+    <!-- ส่วนหัวเว็บไซต์ (Header - โทนญี่ปุ่นมัทฉะพรีเมียม) -->
+    <header class="bg-[#1e3027] text-[#e8efe9] shadow-md sticky top-0 z-50 border-b-4 border-[#3b5d4c]">
         <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <div class="bg-gradient-to-br from-emerald-600 to-emerald-800 text-white p-2 rounded-xl shadow-lg border border-emerald-500/30">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="bg-[#2d473a] text-emerald-300 p-2.5 rounded-2xl shadow-inner border border-emerald-600/40">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold tracking-widest text-white">KURO</h1>
-                    <p class="text-[10px] tracking-widest text-emerald-400 uppercase font-semibold">Matcha Amour</p>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-xl font-bold tracking-wider text-white">KURO</h1>
+                        <span class="text-[10px] bg-emerald-800/80 text-emerald-200 px-2 py-0.5 rounded-full font-light">抹茶 • MATCHA</span>
+                    </div>
+                    <p class="text-[11px] tracking-widest text-emerald-300/80 uppercase font-medium">Authentic Japanese Tea Bar</p>
                 </div>
             </div>
 
             <div class="flex items-center gap-2">
-                <button onclick="openOrderModal()" class="relative bg-[#141d1a] border border-emerald-500/30 text-emerald-300 text-xs px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 hover:bg-[#1a2622] transition-all shadow-sm">
-                    <span>📋 ออเดอร์ของคุณ</span>
-                    <span id="order-badge" class="bg-emerald-600 text-white text-[10px] px-1.5 py-0.2 rounded-full font-extrabold">0</span>
+                <button onclick="openOrderModal()" class="relative bg-[#294236] hover:bg-[#345344] border border-emerald-600/30 text-emerald-100 text-xs px-3.5 py-2.5 rounded-xl font-medium flex items-center gap-1.5 transition-all shadow-sm">
+                    <span>🍵 ออเดอร์</span>
+                    <span id="order-badge" class="bg-emerald-600 text-white text-[10px] px-1.5 py-0.2 rounded-full font-bold">0</span>
                 </button>
-                <button onclick="promptShopSettings()" class="bg-[#182420] border border-emerald-800/60 text-emerald-400 hover:bg-emerald-950 text-xs px-3 py-2 rounded-xl font-bold transition-all flex items-center gap-1 shadow-sm">
-                    ⚙️ ตั้งค่าร้าน
+                <button onclick="promptShopSettings()" class="bg-[#24382e] hover:bg-[#2d473a] border border-emerald-700/40 text-emerald-300 text-xs px-3 py-2.5 rounded-xl font-medium transition-all flex items-center gap-1 shadow-sm">
+                    ⚙️ ตั้งค่า
                 </button>
-                <span id="shop-status-badge" class="px-3 py-1 rounded-full text-xs font-semibold border hidden sm:inline-block">
+                <span id="shop-status-badge" class="px-3 py-1.5 rounded-full text-xs font-medium border hidden sm:inline-block shadow-sm">
                     ● กำลังตรวจสอบ...
                 </span>
             </div>
@@ -51,92 +59,95 @@
     </header>
 
     <!-- แจ้งเตือนกรณีปิดทำการ -->
-    <div id="closed-banner" class="hidden bg-gradient-to-r from-red-950 via-red-900 to-red-950 text-white text-center py-6 px-6 shadow-2xl border-b-4 border-red-600">
-        <div class="max-w-xl mx-auto space-y-2">
-            <span class="text-4xl">🚨</span>
-            <h2 class="text-2xl font-black tracking-wide text-red-200">วันนี้ร้านปิด</h2>
-            <p class="text-sm text-red-300 font-medium">ระบบปิดรับออเดอร์ชั่วคราวในขณะนี้ ขออภัยในความไม่สะดวกครับ 🙏</p>
+    <div id="closed-banner" class="hidden bg-amber-900 text-amber-50 text-center py-5 px-6 shadow-md border-b-2 border-amber-700">
+        <div class="max-w-xl mx-auto space-y-1">
+            <span class="text-3xl">🍵🌿</span>
+            <h2 class="text-xl font-bold tracking-wide">ร้านปิดทำการชั่วคราว / นอกเวลา</h2>
+            <p class="text-xs text-amber-200 font-light">ระบบปิดรับออเดอร์อัตโนมัติ (สามารถใช้รหัสผ่านที่ปุ่ม "ตั้งค่า" มุมบนขวาเพื่อเปิดร้านกรณีพิเศษได้ครับ)</p>
         </div>
     </div>
 
     <!-- คอนเทนเนอร์หลัก -->
     <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-6 grid grid-cols-1 md:grid-cols-12 gap-6">
         
-        <!-- ฝั่งซ้าย: เลือกเมนูและความหวาน + ปุ่มเพิ่มลงตะกร้า -->
-        <section class="md:col-span-7 space-y-6">
-            <div class="bg-[#121a17]/90 rounded-2xl p-5 shadow-xl border border-emerald-950/80 space-y-4">
-                <h2 class="text-base font-bold text-white border-b border-emerald-950 pb-2 flex items-center gap-2">
-                    <span class="text-emerald-500">❖</span> KURO PREMIUM MENU
-                </h2>
+        <!-- ฝั่งซ้าย: เมนูมัทฉะพรีเมียมสไตล์ญี่ปุ่น -->
+        <section class="md:col-span-7 space-y-5">
+            <div class="bg-white/90 backdrop-blur rounded-2xl p-5 shadow-sm border border-emerald-900/10 space-y-4">
+                <div class="flex items-center justify-between border-b border-emerald-900/10 pb-3">
+                    <h2 class="text-sm font-bold text-[#1e3027] tracking-wide flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-600"></span> ญี่ปุ่นมัทฉะบาร์ (MENU SELECTION)
+                    </h2>
+                    <span class="text-[11px] text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg font-medium border border-emerald-200">Ceremonial Grade</span>
+                </div>
 
                 <div class="space-y-3">
-                    <div onclick="selectProduct('Matcha Latte (มัทฉะลาเต้)', 45)" id="prod-0" class="p-4 rounded-xl border-2 border-emerald-500 bg-emerald-950/30 cursor-pointer transition-all flex justify-between items-center shadow-md">
+                    <div onclick="selectProduct('Matcha Latte (มัทฉะลาเต้)', 45)" id="prod-0" class="p-4 rounded-2xl border-2 border-emerald-600 bg-emerald-50/60 cursor-pointer transition-all flex justify-between items-center shadow-sm">
                         <div>
-                            <h3 class="font-bold text-white text-sm">Matcha Latte <span class="text-emerald-400 font-normal">/ มัทฉะลาเต้</span></h3>
-                            <p class="text-xs text-zinc-400 mt-0.5">Swirled creamy matcha with premium milk</p>
+                            <h3 class="font-bold text-[#1e3027] text-sm">Matcha Latte <span class="text-emerald-700 font-normal text-xs">/ มัทฉะลาเต้ละมุนลิ้น</span></h3>
+                            <p class="text-xs text-zinc-500 mt-0.5">มัทฉะแท้กลมกล่อม ผสมนมสดพรีเมียมสูตรพิเศษ</p>
                         </div>
-                        <span class="font-bold text-emerald-400 text-sm">฿45</span>
+                        <span class="font-bold text-emerald-800 text-sm bg-white px-3 py-1.5 rounded-xl border border-emerald-200 shadow-sm">฿45</span>
                     </div>
 
-                    <div onclick="selectProduct('Coconut Matcha (มัทฉะมะพร้าว)', 45)" id="prod-1" class="p-4 rounded-xl border-2 border-emerald-950 bg-[#121a17]/50 cursor-pointer transition-all hover:border-emerald-600/50 flex justify-between items-center">
+                    <div onclick="selectProduct('Coconut Matcha (มัทฉะมะพร้าว)', 45)" id="prod-1" class="p-4 rounded-2xl border-2 border-zinc-200 bg-white cursor-pointer transition-all hover:border-emerald-600/50 flex justify-between items-center shadow-sm">
                         <div>
-                            <h3 class="font-bold text-white text-sm">Coconut Matcha <span class="text-emerald-400 font-normal">/ มัทฉะมะพร้าว</span></h3>
-                            <p class="text-xs text-zinc-400 mt-0.5">Authentic layered fresh coconut water & pure matcha</p>
+                            <h3 class="font-bold text-[#1e3027] text-sm">Coconut Matcha <span class="text-emerald-700 font-normal text-xs">/ มัทฉะน้ำมะพร้าว</span></h3>
+                            <p class="text-xs text-zinc-500 mt-0.5">ความสดชื่นจากน้ำมะพร้าวแท้ตัดกับความเข้มข้นของมัทฉะ</p>
                         </div>
-                        <span class="font-bold text-emerald-400 text-sm">฿45</span>
+                        <span class="font-bold text-emerald-800 text-sm bg-zinc-50 px-3 py-1.5 rounded-xl border border-zinc-200">฿45</span>
                     </div>
 
-                    <div onclick="selectProduct('Pure Matcha (เพียวมัทฉะ)', 40)" id="prod-2" class="p-4 rounded-xl border-2 border-emerald-950 bg-[#121a17]/50 cursor-pointer transition-all hover:border-emerald-600/50 flex justify-between items-center">
+                    <div onclick="selectProduct('Pure Matcha (เพียวมัทฉะ)', 40)" id="prod-2" class="p-4 rounded-2xl border-2 border-zinc-200 bg-white cursor-pointer transition-all hover:border-emerald-600/50 flex justify-between items-center shadow-sm">
                         <div>
-                            <h3 class="font-bold text-white text-sm">Pure Matcha <span class="text-emerald-400 font-normal">/ เพียวมัทฉะ</span></h3>
-                            <p class="text-xs text-zinc-400 mt-0.5">A traditional, deep, pure matcha whisked to perfection</p>
+                            <h3 class="font-bold text-[#1e3027] text-sm">Pure Matcha <span class="text-emerald-700 font-normal text-xs">/ เพียวมัทฉะดั้งเดิม</span></h3>
+                            <p class="text-xs text-zinc-500 mt-0.5">ชาเขียวแท้เข้มข้นตีด้วยแปรงไม้ไผ่แบบฉบับดั้งเดิม</p>
                         </div>
-                        <span class="font-bold text-emerald-400 text-sm">฿40</span>
+                        <span class="font-bold text-emerald-800 text-sm bg-zinc-50 px-3 py-1.5 rounded-xl border border-zinc-200">฿40</span>
                     </div>
                 </div>
             </div>
 
             <!-- ระดับความหวาน -->
-            <div class="bg-[#121a17]/90 rounded-2xl p-5 shadow-xl border border-emerald-950/80 space-y-3">
-                <h3 class="text-sm font-bold text-white flex items-center gap-2">
-                    <span class="text-emerald-500">✨</span> ระดับความหวาน
+            <div class="bg-white/90 backdrop-blur rounded-2xl p-5 shadow-sm border border-emerald-900/10 space-y-3">
+                <h3 class="text-xs font-bold text-[#1e3027] flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-600"></span> เลือกระดับความหวาน (SWEETNESS LEVEL)
                 </h3>
                 <div class="grid grid-cols-4 gap-2">
-                    <button type="button" onclick="setSweetness('0%')" id="sweet_0" class="py-2 rounded-xl border text-xs font-semibold bg-emerald-600 text-white border-emerald-600 shadow-md">0%</button>
-                    <button type="button" onclick="setSweetness('25%')" id="sweet_25" class="py-2 rounded-xl border text-xs font-semibold bg-[#182420] border-emerald-950 text-zinc-300">25%</button>
-                    <button type="button" onclick="setSweetness('50%')" id="sweet_50" class="py-2 rounded-xl border text-xs font-semibold bg-[#182420] border-emerald-950 text-zinc-300">50%</button>
-                    <button type="button" onclick="setSweetness('100%')" id="sweet_100" class="py-2 rounded-xl border text-xs font-semibold bg-[#182420] border-emerald-950 text-zinc-300">100%</button>
+                    <button type="button" onclick="setSweetness('0%')" id="sweet_0" class="py-2.5 rounded-xl border text-xs font-bold bg-[#1e3027] text-white border-[#1e3027] shadow-sm">0%</button>
+                    <button type="button" onclick="setSweetness('25%')" id="sweet_25" class="py-2.5 rounded-xl border text-xs font-bold bg-zinc-100 border-zinc-200 text-zinc-700">25%</button>
+                    <button type="button" onclick="setSweetness('50%')" id="sweet_50" class="py-2.5 rounded-xl border text-xs font-bold bg-zinc-100 border-zinc-200 text-zinc-700">50%</button>
+                    <button type="button" onclick="setSweetness('100%')" id="sweet_100" class="py-2.5 rounded-xl border text-xs font-bold bg-zinc-100 border-zinc-200 text-zinc-700">100%</button>
                 </div>
 
                 <!-- ปุ่มเพิ่มแก้วนี้ลงในรายการ -->
-                <button type="button" onclick="addCurrentItemToCart()" class="w-full py-2.5 bg-[#182420] hover:bg-emerald-950 text-emerald-400 border border-emerald-600/50 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-sm mt-2">
-                    <span>➕</span> เพิ่มแก้วนี้ลงในรายการสั่งซื้อ
+                <button type="button" onclick="addCurrentItemToCart()" class="w-full py-3 bg-[#2d473a] hover:bg-[#1e3027] text-white rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-sm mt-2">
+                    <span>🍵</span> เพิ่มแก้วนี้ลงในรายการสั่งซื้อ
                 </button>
             </div>
 
             <!-- รายการแก้วที่เลือกในออเดอร์นี้ -->
-            <div class="bg-[#121a17]/90 rounded-2xl p-5 shadow-xl border border-emerald-950/80 space-y-3">
-                <h3 class="text-sm font-bold text-white flex items-center justify-between">
-                    <span class="flex items-center gap-2"><span class="text-emerald-500">🛒</span> รายการสินค้าในออเดอร์นี้</span>
-                    <span id="cart-count-badge" class="bg-emerald-900/60 text-emerald-300 text-xs px-2 py-0.5 rounded-full font-bold">0 แก้ว</span>
+            <div class="bg-white/90 backdrop-blur rounded-2xl p-5 shadow-sm border border-emerald-900/10 space-y-3">
+                <h3 class="text-xs font-bold text-[#1e3027] flex items-center justify-between">
+                    <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-600"></span> รายการสินค้าในออเดอร์นี้</span>
+                    <span id="cart-count-badge" class="bg-emerald-100 text-emerald-800 text-xs px-2.5 py-0.5 rounded-full font-bold">0 แก้ว</span>
                 </h3>
                 <div id="cart-items-container" class="space-y-2 max-h-40 overflow-y-auto pr-1">
-                    <div class="text-center py-4 text-zinc-500 text-xs">ยังไม่มีสินค้า (กดปุ่มเพิ่มแก้วด้านบนได้เลย)</div>
+                    <div class="text-center py-4 text-zinc-400 text-xs">ยังไม่มีสินค้าในตะกร้า</div>
                 </div>
             </div>
         </section>
 
-        <!-- ฝั่งขวา: เลือกวันและเวลาจัดส่ง + พร้อมเพย์พร้อมปุ่มคัดลอก -->
-        <section class="md:col-span-5 space-y-6">
-            <div class="bg-[#121a17]/90 rounded-2xl p-5 shadow-xl border border-emerald-950/80 space-y-4">
-                <h2 class="text-base font-bold text-white border-b border-emerald-950 pb-2 flex items-center gap-2">
-                    <span class="text-emerald-500">🚚</span> รอบเวลาจัดส่ง & ชำระเงิน
+        <!-- ฝั่งขวา: รอบเวลาจัดส่ง + ส่งสลิปทางไลน์ -->
+        <section class="md:col-span-5 space-y-5">
+            <div class="bg-white/90 backdrop-blur rounded-2xl p-5 shadow-sm border border-emerald-900/10 space-y-4">
+                <h2 class="text-sm font-bold text-[#1e3027] border-b border-emerald-900/10 pb-3 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-600"></span> รอบเวลาจัดส่ง & ชำระเงิน
                 </h2>
 
                 <!-- เลือกวัน -->
                 <div class="space-y-1">
-                    <label class="block text-xs font-semibold text-zinc-400">เลือกวันจัดส่ง</label>
-                    <select id="deliveryDay" onchange="onDayChange()" class="w-full bg-[#182420] border border-emerald-900/50 rounded-xl px-3 py-2.5 text-sm font-semibold text-white focus:outline-none focus:border-emerald-500">
+                    <label class="block text-xs font-bold text-zinc-600">เลือกวันจัดส่ง</label>
+                    <select id="deliveryDay" onchange="onDayChange()" class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1e3027] focus:outline-none focus:border-emerald-600">
                         <option value="Monday">วันจันทร์</option>
                         <option value="Tuesday">วันอังคาร</option>
                         <option value="Wednesday">วันพุธ</option>
@@ -147,58 +158,58 @@
 
                 <!-- เลือกรอบเวลา -->
                 <div class="space-y-1">
-                    <label class="block text-xs font-semibold text-zinc-400">เลือกรอบเวลาที่ต้องการรับ (ห่างกัน 10 นาที)</label>
-                    <select id="timeSlotSelect" class="w-full bg-[#182420] border border-emerald-600/50 rounded-xl px-3 py-2.5 text-sm font-bold text-emerald-300 focus:outline-none focus:border-emerald-500">
+                    <label class="block text-xs font-bold text-zinc-600">เลือกรอบเวลา (ห่างกัน 10 นาที)</label>
+                    <select id="timeSlotSelect" class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-emerald-800 focus:outline-none focus:border-emerald-600">
                     </select>
                     
-                    <div class="bg-emerald-950/40 border border-emerald-900/50 p-2.5 rounded-xl mt-1 text-[11px] text-emerald-300 font-bold flex items-start gap-1.5">
-                        <span class="text-sm">ℹ️</span>
+                    <div class="bg-emerald-50/70 border border-emerald-200/60 p-3 rounded-xl mt-1 text-[11px] text-emerald-900 flex items-start gap-2">
+                        <span class="text-sm">🍵</span>
                         <div>
-                            <span>ช่วงเวลาทำการของวันนี้:</span>
-                            <span id="day-rule-desc" class="block text-emerald-200 font-extrabold mt-0.5">กำลังโหลดรอบเวลา...</span>
+                            <span class="font-bold">ช่วงเวลาทำการรอบนี้:</span>
+                            <span id="day-rule-desc" class="block text-emerald-700 font-bold mt-0.5">กำลังโหลด...</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- ที่อยู่ -->
                 <div class="space-y-1">
-                    <label class="block text-xs font-semibold text-zinc-400">ที่อยู่จัดส่ง / เบอร์โทร</label>
-                    <textarea id="customerAddress" rows="2" placeholder="ระบุที่อยู่และเบอร์ติดต่อ..." class="w-full bg-[#182420] border border-emerald-900/50 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 placeholder-zinc-500"></textarea>
+                    <label class="block text-xs font-bold text-zinc-600">ที่อยู่จัดส่ง / เบอร์โทร</label>
+                    <textarea id="customerAddress" rows="2" placeholder="ระบุที่อยู่และเบอร์ติดต่อ..." class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2 text-xs text-[#1e3027] focus:outline-none focus:border-emerald-600 placeholder-zinc-400"></textarea>
                 </div>
 
-                <!-- ช่องทางชำระเงิน พร้อมเพย์ -->
-                <div class="space-y-2 bg-[#0d1412] p-3.5 rounded-xl border border-emerald-950 text-center">
-                    <div class="flex justify-between items-center text-xs font-bold text-emerald-400 mb-1">
-                        <span>💳 พร้อมเพย์ (PromptPay)</span>
-                        <span>฿<span id="qr-price">45</span></span>
+                <!-- เปลี่ยนจากพร้อมเพย์ เป็น ส่งสลิปทางไลน์ (พร้อมรูป QR ที่แนบมา) -->
+                <div class="space-y-2.5 bg-[#f8faf8] p-4 rounded-2xl border border-emerald-900/10 text-center">
+                    <div class="flex justify-between items-center text-xs font-bold text-[#1e3027]">
+                        <span>💬 ส่งสลิปโอนเงินทางไลน์</span>
+                        <span class="text-emerald-700 text-sm">฿<span id="qr-price">45</span></span>
                     </div>
 
-                    <div class="bg-[#141d1a] p-3 rounded-xl border border-emerald-900/40 space-y-2">
-                        <p class="text-xs text-zinc-400">โอนผ่านเบอร์พร้อมเพย์:</p>
-                        <div class="flex items-center justify-center gap-2">
-                            <span id="promptpay-number" class="text-base font-extrabold text-white tracking-wider">0810049822</span>
-                            <button type="button" onclick="copyPromptPay()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold px-3 py-1.5 rounded-lg transition-all shadow-md flex items-center gap-1">
-                                📋 คัดลอกเบอร์
-                            </button>
+                    <div class="bg-white p-3 rounded-xl border border-zinc-200 shadow-sm space-y-2">
+                        <p class="text-[11px] text-zinc-500 font-medium">สแกน QR Code หรือแอดไลน์เพื่อส่งสลิปยืนยันออเดอร์:</p>
+                        
+                        <!-- รูป QR Code ที่ผู้ใช้แนบมา -->
+                        <div class="flex justify-center my-1">
+                            <img src="1000027271.jpg" alt="LINE QR Code" class="w-32 h-32 object-contain rounded-lg border border-zinc-100 shadow-inner">
                         </div>
-                        <p class="text-xs text-emerald-300">ชื่อบัญชี: <strong class="text-white">ภาณุวัฒน์</strong></p>
+
+                        <p class="text-[11px] text-emerald-800 font-bold">ID LINE สำหรับส่งสลิป: <span class="bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 text-zinc-800">@kuro_matcha</span> (หรือสแกนด้านบน)</p>
                     </div>
 
                     <div class="space-y-1 text-left mt-2">
-                        <label class="block text-[11px] font-semibold text-zinc-400">แนบสลิปโอนเงิน (จำเป็น)</label>
-                        <input type="file" id="slipFile" accept="image/*" class="w-full text-xs text-zinc-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-600 file:text-white hover:file:bg-emerald-500 cursor-pointer">
+                        <label class="block text-[11px] font-bold text-zinc-600">แนบรูปสลิปหลักฐาน (เพื่อบันทึกในระบบร้าน)</label>
+                        <input type="file" id="slipFile" accept="image/*" class="w-full text-xs text-zinc-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#2d473a] file:text-white hover:file:bg-[#1e3027] cursor-pointer bg-white border border-zinc-200 rounded-xl p-1">
                     </div>
                 </div>
 
                 <!-- สรุปและปุ่มสั่งซื้อ -->
-                <div class="pt-2 border-t border-emerald-950 space-y-2">
-                    <div class="flex justify-between items-center text-sm font-bold text-white pt-1">
-                        <span>ยอดรวมสุทธิทั้งสิ้น:</span>
-                        <span id="summary-total-price" class="text-emerald-400 text-base">฿45</span>
+                <div class="pt-2 border-t border-emerald-900/10 space-y-2">
+                    <div class="flex justify-between items-center text-sm font-bold text-[#1e3027] pt-1">
+                        <span>ยอดรวมสุทธิ:</span>
+                        <span id="summary-total-price" class="text-emerald-700 text-base">฿45</span>
                     </div>
 
-                    <button id="submit-btn" onclick="submitOrder()" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white font-extrabold rounded-xl shadow-lg transition-all text-sm mt-1 border border-emerald-500/30">
-                        ยืนยันการสั่งซื้อ KURO
+                    <button id="submit-btn" onclick="submitOrder()" class="w-full py-3.5 bg-[#1e3027] hover:bg-[#2d473a] text-white font-bold rounded-xl shadow-md transition-all text-xs tracking-wide">
+                        🌿 ยืนยันการสั่งซื้อ KURO MATCHA
                     </button>
                 </div>
             </div>
@@ -207,48 +218,48 @@
     </main>
 
     <!-- ป๊อปอัพ Thank You -->
-    <div id="thankYouModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-[#121a17] rounded-3xl max-w-sm w-full p-6 shadow-2xl text-center space-y-4 border border-emerald-900/50">
-            <div class="w-16 h-16 bg-emerald-950 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-3xl border border-emerald-800/50">
+    <div id="thankYouModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl text-center space-y-4 border border-emerald-900/10">
+            <div class="w-16 h-16 bg-emerald-50 text-emerald-700 rounded-full flex items-center justify-center mx-auto text-3xl border border-emerald-200">
                 🍵
             </div>
             <div class="space-y-1">
-                <h3 class="text-xl font-bold text-white">Thank You!</h3>
-                <p class="text-xs text-zinc-400">ขอบคุณที่สนับสนุนมัทฉะพรีเมียมของเรา ทางเราได้รับออเดอร์และตรวจสอบสลิปของคุณเรียบร้อยแล้วครับ 🎉</p>
+                <h3 class="text-lg font-bold text-[#1e3027]">ありがとうございます</h3>
+                <p class="text-xs text-zinc-500">ขอบคุณที่สนับสนุนมัทฉะพรีเมียมของเรา กรุณาส่งสลิปยืนยันทาง LINE ร้านเรียบร้อยแล้ว ขอให้มีความสุขกับชาเขียวครับ ✨</p>
             </div>
-            <button onclick="closeThankYouModal()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl transition-all shadow-md">
+            <button onclick="closeThankYouModal()" class="w-full py-2.5 bg-[#1e3027] hover:bg-[#2d473a] text-white text-xs font-bold rounded-xl transition-all shadow-sm">
                 ตกลง / ดูรายการออเดอร์
             </button>
         </div>
     </div>
 
     <!-- ป๊อปอัพแสดงรายการออเดอร์ -->
-    <div id="orderModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-[#121a17] rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[80vh] flex flex-col border border-emerald-900/50">
-            <div class="flex justify-between items-center border-b border-emerald-950 pb-3">
-                <h3 class="font-bold text-white text-base flex items-center gap-2">
-                    <span>📋</span> รายการออเดอร์ทั้งหมด (<span id="modal-count">0</span>)
+    <div id="orderModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[80vh] flex flex-col border border-emerald-900/10">
+            <div class="flex justify-between items-center border-b border-zinc-200 pb-3">
+                <h3 class="font-bold text-[#1e3027] text-sm flex items-center gap-2">
+                    <span>🍵</span> รายการออเดอร์ทั้งหมด (<span id="modal-count">0</span>)
                 </h3>
                 <div class="flex items-center gap-2">
-                    <button id="admin-toggle-btn" onclick="toggleAdminMode()" class="text-emerald-400 hover:bg-[#182420] text-xs font-bold border border-emerald-800/50 px-3 py-1.5 rounded-xl transition-all">
+                    <button id="admin-toggle-btn" onclick="toggleAdminMode()" class="text-emerald-800 hover:bg-emerald-50 text-xs font-bold border border-emerald-300 px-3 py-1.5 rounded-xl transition-all">
                         ⚙️ โหมดจัดการ
                     </button>
-                    <button onclick="closeOrderModal()" class="text-zinc-400 hover:text-white text-xs font-bold bg-[#182420] px-3 py-1.5 rounded-xl">ปิด</button>
+                    <button onclick="closeOrderModal()" class="text-zinc-600 hover:text-black text-xs font-bold bg-zinc-100 px-3 py-1.5 rounded-xl">ปิด</button>
                 </div>
             </div>
             
             <div id="order-list-container" class="overflow-y-auto space-y-3 flex-grow pr-1">
-                <div class="text-center py-10 text-zinc-500 text-xs">ยังไม่มีออเดอร์ในระบบ</div>
+                <div class="text-center py-10 text-zinc-400 text-xs">ยังไม่มีออเดอร์ในระบบ</div>
             </div>
 
-            <div class="pt-3 border-t border-emerald-950 text-center">
-                <p class="text-[11px] text-zinc-500">ออเดอร์ทั้งหมดจะแสดงที่หน้านี้เมื่อมีลูกค้ากดสั่งซื้อครับ</p>
+            <div class="pt-3 border-t border-zinc-200 text-center">
+                <p class="text-[11px] text-zinc-400">รายการออเดอร์ทั้งหมดจะแสดงที่นี่เมื่อมีลูกค้ากดสั่งซื้อ</p>
             </div>
         </div>
     </div>
 
     <!-- แจ้งเตือน Toast -->
-    <div id="toastMessage" class="fixed bottom-6 right-6 bg-[#182420] text-emerald-300 border border-emerald-700/50 text-xs px-5 py-3 rounded-xl shadow-2xl transition-all translate-y-20 opacity-0 pointer-events-none z-50">
+    <div id="toastMessage" class="fixed bottom-6 right-6 bg-[#1e3027] text-white text-xs px-5 py-3 rounded-xl shadow-2xl transition-all translate-y-20 opacity-0 pointer-events-none z-50 font-medium border border-emerald-700/50">
         บันทึกออเดอร์สำเร็จ!
     </div>
 
@@ -260,14 +271,15 @@
             sweetness: "0%"
         };
 
-        // ตะกร้าสินค้าสำหรับออเดอร์ปัจจุบัน (รองรับการสั่งหลายแก้ว)
         let currentCart = [
             { name: "Matcha Latte (มัทฉะลาเต้)", price: 45, sweetness: "0%" }
         ];
 
         let orders = [];
         let isAdminMode = false;
-        let isManuallyClosed = localStorage.getItem('kuro_manual_closed') === 'true';
+        
+        // ตัวแปรสำหรับบังคับเปิดร้านในวันหยุด
+        let isForceOpen = localStorage.getItem('kuro_force_open') === 'true';
 
         const timeRules = {
             'Monday': { start: '08:00', end: '08:20', text: '08:00 - 08:20 น.' },
@@ -294,28 +306,19 @@
             return slots;
         }
 
-        function copyPromptPay() {
-            const phoneNumber = document.getElementById('promptpay-number').textContent;
-            navigator.clipboard.writeText(phoneNumber).then(() => {
-                showToast("📋 คัดลอกเบอร์พร้อมเพย์เรียบร้อยแล้ว!");
-            }).catch(err => {
-                showToast("❌ ไม่สามารถคัดลอกได้");
-            });
-        }
-
         function promptShopSettings() {
             let password = prompt("กรุณากรอกรหัสผ่านเพื่อตั้งค่าร้าน:");
             if (password === "0871599837") {
-                let currentStatusText = isManuallyClosed ? "ปัจจุบัน: ร้านปิดอยู่" : "ปัจจุบัน: ร้านเปิดปกติ";
-                let action = confirm(`${currentStatusText}\n\nคุณต้องการสลับสถานะเปิด/ปิดร้านหรือไม่?\n(กด OK เพื่อสลับสถานะ / กด Cancel เพื่อออก)`);
+                let currentText = isForceOpen ? "สถานะตอนนี้: เปิดร้านกรณีพิเศษอยู่" : "สถานะตอนนี้: ตามระบบเวลาปกติ";
+                let action = confirm(`${currentText}\n\nคุณต้องการเปิดร้านเป็นกรณีพิเศษ (แม้เป็นวันหยุด) หรือไม่?\n(กด OK เพื่อสลับสถานะเปิดพิเศษ / กด Cancel เพื่อใช้ระบบปกติ)`);
                 if (action) {
-                    isManuallyClosed = !isManuallyClosed;
-                    localStorage.setItem('kuro_manual_closed', isManuallyClosed);
-                    checkShopStatus(); // อัปเดตสถานะหน้าจอทันที
-                    if (isManuallyClosed) {
-                        showToast("🔒 ตั้งค่า: ปิดร้านเรียบร้อยแล้ว");
+                    isForceOpen = !isForceOpen;
+                    localStorage.setItem('kuro_force_open', isForceOpen);
+                    checkShopStatus();
+                    if (isForceOpen) {
+                        showToast("🔓 เปิดร้านกรณีพิเศษสำเร็จ!");
                     } else {
-                        showToast("🔓 ตั้งค่า: เปิดร้านเรียบร้อยแล้ว");
+                        showToast("🔒 กลับสู่โหมดตรวจสอบอัตโนมัติตามปกติ");
                     }
                 }
             } else if (password !== null) {
@@ -330,9 +333,9 @@
             ['Matcha Latte (มัทฉะลาเต้)', 'Coconut Matcha (มัทฉะมะพร้าว)', 'Pure Matcha (เพียวมัทฉะ)'].forEach((mName, idx) => {
                 const card = document.getElementById(`prod-${idx}`);
                 if (mName === name) {
-                    card.className = "p-4 rounded-xl border-2 border-emerald-500 bg-emerald-950/30 cursor-pointer transition-all flex justify-between items-center shadow-md";
+                    card.className = "p-4 rounded-2xl border-2 border-emerald-600 bg-emerald-50/60 cursor-pointer transition-all flex justify-between items-center shadow-sm";
                 } else {
-                    card.className = "p-4 rounded-xl border-2 border-emerald-950 bg-[#121a17]/50 cursor-pointer transition-all hover:border-emerald-600/50 flex justify-between items-center";
+                    card.className = "p-4 rounded-2xl border-2 border-zinc-200 bg-white cursor-pointer transition-all hover:border-emerald-600/50 flex justify-between items-center shadow-sm";
                 }
             });
         }
@@ -342,9 +345,9 @@
             ['0', '25', '50', '100'].forEach(lvl => {
                 const btn = document.getElementById(`sweet_${lvl}`);
                 if (sweet === `${lvl}%`) {
-                    btn.className = "py-2 rounded-xl border text-xs font-semibold bg-emerald-600 text-white border-emerald-600 shadow-md";
+                    btn.className = "py-2.5 rounded-xl border text-xs font-bold bg-[#1e3027] text-white border-[#1e3027] shadow-sm";
                 } else {
-                    btn.className = "py-2 rounded-xl border text-xs font-semibold bg-[#182420] border-emerald-950 text-zinc-300";
+                    btn.className = "py-2.5 rounded-xl border text-xs font-bold bg-zinc-100 border-zinc-200 text-zinc-700";
                 }
             });
         }
@@ -356,7 +359,7 @@
                 sweetness: selectedProduct.sweetness
             });
             renderCart();
-            showToast(`➕ เพิ่ม ${selectedProduct.name} ลงในรายการแล้ว`);
+            showToast(`🍵 เพิ่ม ${selectedProduct.name} ลงในตะกร้าแล้ว`);
         }
 
         function removeFromCart(index) {
@@ -378,12 +381,12 @@
             container.innerHTML = currentCart.map((item, idx) => {
                 totalPrice += item.price;
                 return `
-                    <div class="bg-[#182420] border border-emerald-950 p-2.5 rounded-xl flex justify-between items-center text-xs">
+                    <div class="bg-zinc-50 border border-zinc-200 p-3 rounded-xl flex justify-between items-center text-xs">
                         <div>
-                            <span class="font-bold text-white">${idx + 1}. ${item.name}</span>
-                            <div class="text-[11px] text-emerald-400">หวาน ${item.sweetness} | ฿${item.price}</div>
+                            <span class="font-bold text-[#1e3027]">${idx + 1}. ${item.name}</span>
+                            <div class="text-[11px] text-emerald-700 font-medium">ความหวาน ${item.sweetness} | ฿${item.price}</div>
                         </div>
-                        <button type="button" onclick="removeFromCart(${idx})" class="text-red-400 hover:text-red-300 font-bold px-2 py-1 bg-red-950/40 rounded-lg text-[10px]">ลบ</button>
+                        <button type="button" onclick="removeFromCart(${idx})" class="text-rose-600 hover:text-rose-700 font-bold px-2.5 py-1 bg-rose-50 rounded-lg text-[10px] border border-rose-100">ลบ</button>
                     </div>
                 `;
             }).join('');
@@ -414,6 +417,19 @@
         }
 
         function checkShopStatus() {
+            const badge = document.getElementById('shop-status-badge');
+            const banner = document.getElementById('closed-banner');
+            const submitBtn = document.getElementById('submit-btn');
+
+            if (isForceOpen) {
+                badge.textContent = "● เปิดร้านกรณีพิเศษ (Force Open)";
+                badge.className = "px-3 py-1.5 bg-emerald-100 text-emerald-900 rounded-full text-xs font-medium border border-emerald-300 hidden sm:inline-block shadow-sm";
+                banner.classList.add('hidden');
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                return;
+            }
+
             const now = new Date();
             const dayOfWeek = now.getDay(); 
             const month = now.getMonth() + 1; 
@@ -424,15 +440,9 @@
             const totalCurrentMinutes = currentHours * 60 + currentMinutes;
             const cutoffMinutes = 7 * 60 + 30;
 
-            const badge = document.getElementById('shop-status-badge');
-            const banner = document.getElementById('closed-banner');
-            const submitBtn = document.getElementById('submit-btn');
-
             let isHoliday = false;
 
-            if (isManuallyClosed) {
-                isHoliday = true;
-            } else if (dayOfWeek === 0 || dayOfWeek === 6) {
+            if (dayOfWeek === 0 || dayOfWeek === 6) {
                 isHoliday = true;
             } else if (totalCurrentMinutes < cutoffMinutes) {
                 isHoliday = true;
@@ -451,14 +461,14 @@
             }
 
             if (isHoliday) {
-                badge.textContent = `● ร้านปิดอยู่ (Manual/ระบบ)`;
-                badge.className = "px-3 py-1 bg-red-950 text-red-300 rounded-full text-xs font-semibold border border-red-800 hidden sm:inline-block";
+                badge.textContent = "● ปิดอัตโนมัติ (วันหยุด)";
+                badge.className = "px-3 py-1.5 bg-rose-100 text-rose-900 rounded-full text-xs font-medium border border-rose-300 hidden sm:inline-block shadow-sm";
                 banner.classList.remove('hidden');
                 submitBtn.disabled = true;
                 submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
             } else {
                 badge.textContent = "● เปิดรับออเดอร์ปกติ";
-                badge.className = "px-3 py-1 bg-emerald-950 text-emerald-300 rounded-full text-xs font-semibold border border-emerald-800 hidden sm:inline-block";
+                badge.className = "px-3 py-1.5 bg-emerald-100 text-emerald-900 rounded-full text-xs font-medium border border-emerald-300 hidden sm:inline-block shadow-sm";
                 banner.classList.add('hidden');
                 submitBtn.disabled = false;
                 submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
@@ -501,7 +511,7 @@
             }
 
             if (!slipFile) {
-                showToast("⚠️ กรุณาแนบสลิปการโอนเงินเพื่อยืนยันออเดอร์");
+                showToast("⚠️ กรุณาแนบรูปสลิปหลักฐานการโอนเงิน");
                 return;
             }
 
@@ -528,7 +538,6 @@
             document.getElementById('customerAddress').value = '';
             document.getElementById('slipFile').value = '';
             
-            // รีเซ็ตตะกร้ากลับมาเป็นค่าเริ่มต้น 1 แก้ว
             currentCart = [{ name: "Matcha Latte (มัทฉะลาเต้)", price: 45, sweetness: "0%" }];
             renderCart();
 
@@ -571,37 +580,37 @@
             const btnToggle = document.getElementById('admin-toggle-btn');
             if (isAdminMode) {
                 btnToggle.textContent = "🔓 ออกจากโหมดจัดการ";
-                btnToggle.className = "text-white bg-emerald-600 hover:bg-emerald-500 text-xs font-bold px-3 py-1.5 rounded-xl transition-all";
+                btnToggle.className = "text-white bg-emerald-800 hover:bg-emerald-700 text-xs font-bold px-3 py-1.5 rounded-xl transition-all";
             } else {
                 btnToggle.textContent = "⚙️ โหมดจัดการ";
-                btnToggle.className = "text-emerald-400 hover:bg-[#182420] text-xs font-bold border border-emerald-800/50 px-3 py-1.5 rounded-xl transition-all";
+                btnToggle.className = "text-emerald-800 hover:bg-emerald-50 text-xs font-bold border border-emerald-300 px-3 py-1.5 rounded-xl transition-all";
             }
 
             if (orders.length === 0) {
-                container.innerHTML = `<div class="text-center py-10 text-zinc-500 text-xs">ยังไม่มีออเดอร์ในระบบ</div>`;
+                container.innerHTML = `<div class="text-center py-10 text-zinc-400 text-xs">ยังไม่มีออเดอร์ในระบบ</div>`;
                 return;
             }
 
             container.innerHTML = orders.map((ord, index) => `
-                <div class="bg-[#182420] border border-emerald-950 rounded-2xl p-4 flex flex-col gap-2 shadow-sm relative">
-                    <div class="flex justify-between items-center text-xs border-b border-emerald-950 pb-1.5">
-                        <span class="font-bold text-emerald-400">ออเดอร์ ${ord.id} (ยอดรวม ฿${ord.totalPrice})</span>
+                <div class="bg-zinc-50 border border-zinc-200 rounded-2xl p-4 flex flex-col gap-2 shadow-sm relative">
+                    <div class="flex justify-between items-center text-xs border-b border-zinc-200 pb-1.5">
+                        <span class="font-bold text-emerald-800">ออเดอร์ ${ord.id} (ยอดรวม ฿${ord.totalPrice})</span>
                         <div class="flex items-center gap-2">
-                            <span class="text-zinc-400">สั่งเมื่อ: ${ord.time}</span>
-                            ${isAdminMode ? `<button onclick="deleteOrder(${index})" class="bg-red-600 hover:bg-red-500 text-white text-[10px] px-2 py-1 rounded-lg font-bold transition-all">🗑️ ลบ</button>` : ''}
+                            <span class="text-zinc-500">สั่งเมื่อ: ${ord.time}</span>
+                            ${isAdminMode ? `<button onclick="deleteOrder(${index})" class="bg-rose-600 hover:bg-rose-500 text-white text-[10px] px-2 py-1 rounded-lg font-bold transition-all">🗑️ ลบ</button>` : ''}
                         </div>
                     </div>
-                    <div class="text-xs text-zinc-300 space-y-1">
+                    <div class="text-xs text-zinc-700 space-y-1">
                         <div><strong>รายการสินค้า:</strong></div>
-                        <ul class="list-disc list-inside pl-1 space-y-0.5 text-emerald-200">
+                        <ul class="list-disc list-inside pl-1 space-y-0.5 text-emerald-900">
                             ${ord.items.map(it => `<li>${it.name} - หวาน ${it.sweetness} (฿${it.price})</li>`).join('')}
                         </ul>
                         <div class="pt-1"><strong>รอบส่ง:</strong> ${ord.day} (เวลา ${ord.timeSlot})</div>
                         <div><strong>ที่อยู่:</strong> ${ord.address}</div>
                         <div class="pt-1">
-                            <strong>สลิปโอนเงิน:</strong><br>
+                            <strong>สลิปโอนเงินที่ลูกค้าแนบ:</strong><br>
                             <a href="${ord.slip}" target="_blank" class="inline-block mt-1">
-                                <img src="${ord.slip}" alt="สลิปโอนเงิน" class="w-20 h-20 object-cover rounded-lg border border-emerald-900/50 hover:opacity-80 transition-all">
+                                <img src="${ord.slip}" alt="สลิปโอนเงิน" class="w-20 h-20 object-cover rounded-xl border border-zinc-300 hover:opacity-80 transition-all shadow-sm">
                             </a>
                         </div>
                     </div>
