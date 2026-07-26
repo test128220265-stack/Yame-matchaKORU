@@ -9,7 +9,7 @@
     <!-- Google Fonts (Prompt & Sarabun) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Prompt', 'Sarabun', sans-serif;
@@ -21,13 +21,12 @@
 <body class="min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white">
 
     <!-- ส่วนหัวเว็บไซต์ (Header) -->
-    <header class="bg-white/90 backdrop-blur-md border-b border-emerald-500/20 sticky top-0 z-50 shadow-sm">
+    <header class="bg-white/90 backdrop-blur-md border-b border-emerald-500/25 sticky top-0 z-50 shadow-sm">
         <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <div class="bg-gradient-to-tr from-emerald-500 via-teal-500 to-lime-400 text-white p-2.5 rounded-2xl shadow-md animate-pulse">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                    </svg>
+                <!-- เปลี่ยนเป็นโลโก้ตัว K สีทองหรูหรา -->
+                <div class="w-11 h-11 bg-gradient-to-tr from-amber-600 via-yellow-500 to-amber-300 text-white rounded-2xl shadow-md flex items-center justify-center font-extrabold text-xl tracking-tighter border border-yellow-200 shadow-yellow-500/20">
+                    K
                 </div>
                 <div>
                     <h1 class="text-xl font-extrabold tracking-wider bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">KURO</h1>
@@ -66,7 +65,7 @@
         <section class="md:col-span-7 space-y-5">
             <div class="bg-white rounded-3xl p-5 shadow-sm border border-emerald-500/20 space-y-4">
                 <h2 class="text-sm font-bold text-emerald-950 border-b border-emerald-100 pb-3 flex items-center gap-2">
-                    <span class="text-emerald-500 text-base">✦</span> KURO PREMIUM MENU
+                    <span class="text-amber-500 text-base font-bold">K</span> KURO PREMIUM MENU
                 </h2>
 
                 <div class="space-y-3">
@@ -99,7 +98,7 @@
             <!-- ระดับความหวาน -->
             <div class="bg-white rounded-3xl p-5 shadow-sm border border-emerald-500/20 space-y-3">
                 <h3 class="text-xs font-bold text-emerald-950 flex items-center gap-2">
-                    <span class="text-teal-500 text-base">✨</span> ระดับความหวาน
+                    <span class="text-amber-500 text-base font-bold">K</span> ระดับความหวาน
                 </h3>
                 <div class="grid grid-cols-4 gap-2">
                     <button type="button" onclick="setSweetness('0%')" id="sweet_0" class="py-2.5 rounded-xl border text-xs font-bold bg-emerald-500 text-white border-emerald-500 shadow-sm">0%</button>
@@ -175,7 +174,7 @@
                     </select>
                 </div>
 
-                <!-- พร้อมเพย์ & แจ้งสลิป LINE (จะแสดงเฉพาะตอนเลือก PromptPay) -->
+                <!-- พร้อมเพย์ & แจ้งสลิป LINE -->
                 <div id="qr-section" class="space-y-2.5 bg-gradient-to-br from-emerald-50/50 to-teal-50/50 p-4 rounded-2xl border border-emerald-200 text-center">
                     <div class="flex justify-between items-center text-xs font-bold text-emerald-950">
                         <span>💳 ชำระผ่าน PromptPay</span>
@@ -220,8 +219,8 @@
     <!-- ป๊อปอัพ Thank You -->
     <div id="thankYouModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl text-center space-y-4 border border-emerald-500/20">
-            <div class="w-16 h-16 bg-gradient-to-tr from-emerald-400 to-teal-400 text-white rounded-full flex items-center justify-center mx-auto text-3xl shadow-md">
-                🍵
+            <div class="w-16 h-16 bg-gradient-to-tr from-amber-500 to-yellow-400 text-white rounded-2xl flex items-center justify-center mx-auto text-2xl font-black shadow-md">
+                K
             </div>
             <div class="space-y-1">
                 <h3 class="text-lg font-bold text-emerald-950">Thank You!</h3>
@@ -271,15 +270,17 @@
             sweetness: "0%"
         };
 
-        // แก้ไขให้ตะกร้าเริ่มต้นว่างเปล่า (เป็นค่าว่าง [])
         let currentCart = [];
-
         let orders = [];
         let isAdminMode = false;
         
         let isForceOpen = localStorage.getItem('kuro_force_open') === 'true';
 
-        const timeRules = {
+        let customTimeSlots = JSON.parse(localStorage.getItem('kuro_custom_slots')) || {
+            'Monday': [], 'Tuesday': [], 'Wednesday': [], 'Thursday': [], 'Friday': []
+        };
+
+        const defaultTimeRules = {
             'Monday': { start: '08:00', end: '08:20', text: '08:00 - 08:20 น.' },
             'Tuesday': { start: '08:00', end: '12:30', text: '08:00 - 12:30 น.' },
             'Wednesday': { start: '08:00', end: '08:20', text: '08:00 - 08:20 น.' },
@@ -307,16 +308,34 @@
         function promptShopSettings() {
             let password = prompt("กรุณากรอกรหัสผ่านเพื่อตั้งค่าร้าน:");
             if (password === "0871599837") {
-                let currentText = isForceOpen ? "สถานะตอนนี้: เปิดร้านกรณีพิเศษอยู่" : "สถานะตอนนี้: ตามระบบเวลาปกติ";
-                let action = confirm(`${currentText}\n\nคุณต้องการเปิดร้านเป็นกรณีพิเศษ (แม้เป็นวันหยุด) หรือไม่?\n(กด OK เพื่อสลับสถานะเปิดพิเศษ / กด Cancel เพื่อใช้ระบบปกติ)`);
-                if (action) {
-                    isForceOpen = !isForceOpen;
-                    localStorage.setItem('kuro_force_open', isForceOpen);
-                    checkShopStatus();
-                    if (isForceOpen) {
-                        showToast("🔓 เปิดร้านกรณีพิเศษสำเร็จ!");
-                    } else {
-                        showToast("🔒 กลับสู่โหมดตรวจสอบอัตโนมัติตามปกติ");
+                let menuChoice = prompt("เลือกเมนูตั้งค่า:\n1. เปิด/ปิด ร้านกรณีพิเศษ\n2. เพิ่มรอบเวลาฉุกเฉิน (เพิ่มคลาส/วันพิเศษ)\n\nพิมพ์เลข 1 หรือ 2:");
+                
+                if (menuChoice === "1") {
+                    let currentText = isForceOpen ? "สถานะตอนนี้: เปิดร้านกรณีพิเศษอยู่" : "สถานะตอนนี้: ตามระบบเวลาปกติ";
+                    let action = confirm(`${currentText}\n\nคุณต้องการเปิดร้านเป็นกรณีพิเศษ หรือไม่?\n(กด OK เพื่อสลับสถานะ / กด Cancel เพื่อยกเลิก)`);
+                    if (action) {
+                        isForceOpen = !isForceOpen;
+                        localStorage.setItem('kuro_force_open', isForceOpen);
+                        checkShopStatus();
+                        showToast(isForceOpen ? "🔓 เปิดร้านกรณีพิเศษสำเร็จ!" : "🔒 กลับสู่โหมดตรวจสอบอัตโนมัติ");
+                    }
+                } else if (menuChoice === "2") {
+                    let dayInput = prompt("เลือกวันที่จะเพิ่มรอบ (พิมพ์ภาษาอังกฤษตัวแรกตัวพิมพ์ใหญ่):\nMonday, Tuesday, Wednesday, Thursday, Friday");
+                    if (['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].includes(dayInput)) {
+                        let timeInput = prompt(`คุณต้องการเพิ่มรอบเวลาใดในวัน ${dayInput}?\n(เช่น 13:00 หรือ 15:30)`);
+                        if (timeInput) {
+                            let formattedTime = timeInput.includes('น.') ? timeInput : timeInput.trim() + ' น.';
+                            if (!customTimeSlots[dayInput].includes(formattedTime)) {
+                                customTimeSlots[dayInput].push(formattedTime);
+                                localStorage.setItem('kuro_custom_slots', JSON.stringify(customTimeSlots));
+                                onDayChange();
+                                showToast(`✨ เพิ่มรอบเวลา ${formattedTime} ในวัน ${dayInput} สำเร็จ!`);
+                            } else {
+                                showToast("⚠️ รอบเวลานี้มีอยู่แล้ว");
+                            }
+                        }
+                    } else if (dayInput !== null) {
+                        showToast("❌ ชื่อวันไม่ถูกต้อง กรุณากรอกให้ตรง เช่น Monday");
                     }
                 }
             } else if (password !== null) {
@@ -410,11 +429,19 @@
 
             slotSelect.innerHTML = "";
 
-            if (timeRules[day]) {
-                const rule = timeRules[day];
-                desc.textContent = rule.text;
+            if (defaultTimeRules[day]) {
+                const rule = defaultTimeRules[day];
+                let slotText = rule.text;
+
+                let generatedSlots = generateTimeSlots(rule.start, rule.end);
                 
-                const generatedSlots = generateTimeSlots(rule.start, rule.end);
+                if (customTimeSlots[day] && customTimeSlots[day].length > 0) {
+                    generatedSlots = generatedSlots.concat(customTimeSlots[day]);
+                    slotText += ` + รอบพิเศษ (${customTimeSlots[day].join(', ')})`;
+                }
+
+                desc.textContent = slotText;
+                
                 generatedSlots.forEach(time => {
                     const opt = document.createElement('option');
                     opt.value = time;
@@ -552,11 +579,9 @@
             document.getElementById('customerAddress').value = '';
             document.getElementById('slipFile').value = '';
             
-            // ล้างตะกร้าให้เป็นค่าว่างหลังสั่งซื้อสำเร็จ
             currentCart = [];
             renderCart();
 
-            // ปรับข้อความในป๊อปอัพขอบคุณตามวิธีชำระเงิน
             const thankyouDesc = document.getElementById('thankyou-desc');
             if (paymentMethod === 'qr') {
                 thankyouDesc.innerHTML = `ขอบคุณที่สนับสนุนมัทฉะของเรา กรุณาส่งสลิปยืนยันทาง LINE <b>@107widix</b> ทางเราจะรีบตรวจสอบครับ 🎉`;
@@ -680,3 +705,4 @@
     </script>
 </body>
 </html>
+
