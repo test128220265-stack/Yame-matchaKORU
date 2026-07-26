@@ -68,7 +68,7 @@
                 </h2>
 
                 <div class="space-y-3">
-                    <div onclick="selectProduct('Matcha Latte (มัทฉะลาเต้)', 45)" id="prod-0" class="p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/60 cursor-pointer transition-all flex justify-between items-center shadow-sm hover:scale-[1.01]">
+                    <div onclick="selectProduct('Matcha Latte (มัทฉะลาเต้)', 45, true)" id="prod-0" class="p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/60 cursor-pointer transition-all flex justify-between items-center shadow-sm hover:scale-[1.01]">
                         <div>
                             <h3 class="font-bold text-emerald-950 text-sm">Matcha Latte <span class="text-emerald-600 font-normal text-xs">/ มัทฉะลาเต้</span></h3>
                             <p class="text-xs text-zinc-500 mt-0.5">มัทฉะเข้มข้นกลมกล่อม ผสมนมสดพรีเมียม</p>
@@ -76,7 +76,7 @@
                         <span class="font-bold text-emerald-700 text-sm bg-white px-3.5 py-2 rounded-xl border border-emerald-200 shadow-sm">฿45</span>
                     </div>
 
-                    <div onclick="selectProduct('Coconut Matcha (มัทฉะมะพร้าว)', 45)" id="prod-1" class="p-4 rounded-2xl border-2 border-zinc-200 bg-white cursor-pointer transition-all hover:border-emerald-400 flex justify-between items-center shadow-sm hover:scale-[1.01]">
+                    <div onclick="selectProduct('Coconut Matcha (มัทฉะมะพร้าว)', 45, true)" id="prod-1" class="p-4 rounded-2xl border-2 border-zinc-200 bg-white cursor-pointer transition-all hover:border-emerald-400 flex justify-between items-center shadow-sm hover:scale-[1.01]">
                         <div>
                             <h3 class="font-bold text-emerald-950 text-sm">Coconut Matcha <span class="text-emerald-600 font-normal text-xs">/ มัทฉะมะพร้าว</span></h3>
                             <p class="text-xs text-zinc-500 mt-0.5">น้ำมะพร้าวสดแท้ตัดกับความเข้มข้นของมัทฉะ</p>
@@ -84,17 +84,17 @@
                         <span class="font-bold text-emerald-700 text-sm bg-zinc-50 px-3.5 py-2 rounded-xl border border-zinc-200 shadow-sm">฿45</span>
                     </div>
 
-                    <div onclick="selectProduct('Pure Matcha (เพียวมัทฉะ)', 40)" id="prod-2" class="p-4 rounded-2xl border-2 border-zinc-200 bg-white cursor-pointer transition-all hover:border-emerald-400 flex justify-between items-center shadow-sm hover:scale-[1.01]">
+                    <div onclick="selectProduct('Pure Matcha (เพียวมัทฉะ)', 40, false)" id="prod-2" class="p-4 rounded-2xl border-2 border-zinc-200 bg-white cursor-pointer transition-all hover:border-emerald-400 flex justify-between items-center shadow-sm hover:scale-[1.01]">
                         <div>
                             <h3 class="font-bold text-emerald-950 text-sm">Pure Matcha <span class="text-emerald-600 font-normal text-xs">/ เพียวมัทฉะ</span></h3>
-                            <p class="text-xs text-zinc-500 mt-0.5">ชาเขียวแท้เข้มข้น หอมกลิ่นใบชาเต็มรสชาติ</p>
+                            <p class="text-xs text-zinc-500 mt-0.5">ชาเขียวแท้เข้มข้น หอมกลิ่นใบชาเต็มรสชาติ (ไม่ใส่นม)</p>
                         </div>
                         <span class="font-bold text-emerald-700 text-sm bg-zinc-50 px-3.5 py-2 rounded-xl border border-zinc-200 shadow-sm">฿40</span>
                     </div>
                 </div>
             </div>
 
-            <!-- ระดับความหวาน & เลือกนม -->
+            <!-- ระดับความหวาน & เลือกนม (แสดงเฉพาะเมนูที่ใส่นม) -->
             <div class="bg-white rounded-3xl p-5 shadow-sm border border-emerald-500/20 space-y-4">
                 <!-- ความหวาน -->
                 <div class="space-y-2">
@@ -109,8 +109,8 @@
                     </div>
                 </div>
 
-                <!-- ชนิดนม -->
-                <div class="space-y-2 pt-2 border-t border-zinc-100">
+                <!-- ชนิดนม (ซ่อนอัตโนมัติเมื่อเลือกเพียวมัทฉะ) -->
+                <div id="milk-selection-box" class="space-y-2 pt-2 border-t border-zinc-100 transition-all">
                     <div class="flex justify-between items-center">
                         <h3 class="text-xs font-bold text-emerald-950 flex items-center gap-2">
                             <span class="text-amber-500 text-base font-bold">🥛</span> ชนิดนม
@@ -311,7 +311,7 @@
             </div>
             
             <div id="order-list-container" class="overflow-y-auto space-y-3 flex-grow pr-1">
-                <div class="text-center py-10 text-zinc-400 text-xs">ยังไม่มีออเดอร์ในเครื่องนี้</div>
+                <div class="text-center py-10 text-zinc-400 text-xs">ยังไม่มีออเดอร์ของคุณในเครื่องนี้</div>
             </div>
 
             <div class="pt-3 border-t border-zinc-200 text-center">
@@ -333,16 +333,13 @@
             price: 45,
             sweetness: "0%",
             milk: "นมสดปกติ",
-            milkExtra: 0
+            milkExtra: 0,
+            hasMilk: true
         };
 
         let currentCart = [];
-        
-        // โหลดเฉพาะออเดอร์ของเครื่องนี้จาก LocalStorage (ลูกค้าคนอื่นมองไม่เห็น)
         let myOrders = JSON.parse(localStorage.getItem('kuro_my_orders')) || [];
-
         let isForceOpen = true; 
-        
         let isOatMilkAvailable = JSON.parse(localStorage.getItem('kuro_oat_milk_status')) ?? true;
 
         let customTimeSlots = JSON.parse(localStorage.getItem('kuro_custom_slots')) || {
@@ -430,10 +427,28 @@
             }
         }
 
-        function selectProduct(name, price) {
+        function selectProduct(name, price, hasMilk) {
             selectedProduct.name = name;
             selectedProduct.basePrice = price;
+            selectedProduct.hasMilk = hasMilk;
+            
+            if (!hasMilk) {
+                selectedProduct.milk = "ไม่ใส่นม";
+                selectedProduct.milkExtra = 0;
+            } else {
+                selectedProduct.milk = "นมสดปกติ";
+                selectedProduct.milkExtra = 0;
+            }
+            
             selectedProduct.price = price + selectedProduct.milkExtra;
+
+            // จัดการแสดงผลแถบเลือกนม (ซ่อนถ้าไม่มีนม)
+            const milkBox = document.getElementById('milk-selection-box');
+            if (hasMilk) {
+                milkBox.classList.remove('hidden');
+            } else {
+                milkBox.classList.add('hidden');
+            }
 
             ['Matcha Latte (มัทฉะลาเต้)', 'Coconut Matcha (มัทฉะมะพร้าว)', 'Pure Matcha (เพียวมัทฉะ)'].forEach((mName, idx) => {
                 const card = document.getElementById(`prod-${idx}`);
@@ -484,10 +499,12 @@
                 name: selectedProduct.name,
                 price: selectedProduct.price,
                 sweetness: selectedProduct.sweetness,
-                milk: selectedProduct.milk
+                milk: selectedProduct.milk,
+                hasMilk: selectedProduct.hasMilk
             });
             renderCart();
-            showToast(`🍵 เพิ่ม ${selectedProduct.name} (${selectedProduct.milk}) ลงในตะกร้าแล้ว`);
+            let milkDesc = selectedProduct.hasMilk ? ` (${selectedProduct.milk})` : "";
+            showToast(`🍵 เพิ่ม ${selectedProduct.name}${milkDesc} ลงในตะกร้าแล้ว`);
         }
 
         function removeFromCart(index) {
@@ -506,11 +523,12 @@
             } else {
                 container.innerHTML = currentCart.map((item, idx) => {
                     totalPrice += item.price;
+                    let detailsText = item.hasMilk ? `หวาน ${item.sweetness} | ${item.milk} | ฿${item.price}` : `หวาน ${item.sweetness} | ไม่ใส่นม | ฿${item.price}`;
                     return `
                         <div class="bg-zinc-50 border border-zinc-200 p-3 rounded-xl flex justify-between items-center text-xs">
                             <div>
                                 <span class="font-bold text-emerald-950">${idx + 1}. ${item.name}</span>
-                                <div class="text-[11px] text-emerald-700 font-bold">หวาน ${item.sweetness} | ${item.milk} | ฿${item.price}</div>
+                                <div class="text-[11px] text-emerald-700 font-bold">${detailsText}</div>
                             </div>
                             <button type="button" onclick="removeFromCart(${idx})" class="text-red-500 hover:text-red-700 font-bold px-2.5 py-1 bg-red-50 rounded-lg text-[10px] border border-red-100">ลบ</button>
                         </div>
@@ -595,9 +613,10 @@
             const paymentMethodText = document.getElementById('paymentMethod').selectedOptions[0].text;
 
             const reviewItemsContainer = document.getElementById('review-items-list');
-            reviewItemsContainer.innerHTML = currentCart.map((it, idx) => `
-                <div><b>${idx + 1}. ${it.name}</b><br><span class="text-emerald-700">หวาน ${it.sweetness} | ${it.milk} | ฿${it.price}</span></div>
-            `).join('');
+            reviewItemsContainer.innerHTML = currentCart.map((it, idx) => {
+                let detailStr = it.hasMilk ? `หวาน ${it.sweetness}, ${it.milk}` : `หวาน ${it.sweetness}, ไม่ใส่นม`;
+                return `<div><b>${idx + 1}. ${it.name}</b><br><span class="text-emerald-700">${detailStr} | ฿${it.price}</span></div>`;
+            }).join('');
 
             document.getElementById('review-delivery').textContent = `${dayText} (${timeSlot})`;
             document.getElementById('review-payment').textContent = paymentMethodText;
@@ -620,14 +639,14 @@
             const dayText = document.getElementById('deliveryDay').selectedOptions[0].text;
 
             let totalAmount = currentCart.reduce((sum, item) => sum + item.price, 0);
-            let itemsDescription = currentCart.map(it => `${it.name} (หวาน ${it.sweetness}, ${it.milk})`).join(', ');
+            let itemsDescription = currentCart.map(it => it.hasMilk ? `${it.name} (หวาน ${it.sweetness}, ${it.milk})` : `${it.name} (หวาน ${it.sweetness}, ไม่ใส่นม)`).join(', ');
 
             const newOrderData = {
                 id: '#' + Math.floor(1000 + Math.random() * 9000),
                 items: itemsDescription,
                 totalPrice: totalAmount,
                 sweetness: currentCart.map(it => it.sweetness).join(', '),
-                milk: currentCart.map(it => it.milk).join(', '),
+                milk: currentCart.map(it => it.hasMilk ? it.milk : 'ไม่ใส่นม').join(', '),
                 day: dayText,
                 timeSlot: timeSlot,
                 address: address,
@@ -647,7 +666,6 @@
             .then(data => {
                 showToast("✨ สั่งซื้อสำเร็จ! บันทึกข้อมูลลง Google Sheets แล้ว");
                 
-                // บันทึกเก็บไว้เฉพาะในเครื่องของลูกค้ารายนี้เท่านั้น
                 myOrders.unshift(newOrderData);
                 localStorage.setItem('kuro_my_orders', JSON.stringify(myOrders));
                 document.getElementById('order-badge').textContent = myOrders.length;
@@ -726,4 +744,3 @@
     </script>
 </body>
 </html>
-
