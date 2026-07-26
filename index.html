@@ -126,7 +126,7 @@
             </div>
         </section>
 
-        <!-- ฝั่งขวา: รอบเวลาจัดส่ง + พร้อมเพย์ & ไลน์ -->
+        <!-- ฝั่งขวา: รอบเวลาจัดส่ง + การชำระเงิน -->
         <section class="md:col-span-5 space-y-5">
             <div class="bg-white rounded-3xl p-5 shadow-sm border border-emerald-500/20 space-y-4">
                 <h2 class="text-sm font-bold text-emerald-950 border-b border-emerald-100 pb-3 flex items-center gap-2">
@@ -166,11 +166,20 @@
                     <textarea id="customerAddress" rows="2" placeholder="ระบุที่อยู่และเบอร์ติดต่อ..." class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2 text-xs text-emerald-950 focus:outline-none focus:border-emerald-500 placeholder-zinc-400"></textarea>
                 </div>
 
-                <!-- พร้อมเพย์ & แจ้งสลิป LINE -->
-                <div class="space-y-2.5 bg-gradient-to-br from-emerald-50/50 to-teal-50/50 p-4 rounded-2xl border border-emerald-200 text-center">
+                <!-- เลือกช่องทางการชำระเงิน -->
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-zinc-600">ช่องทางการชำระเงิน</label>
+                    <select id="paymentMethod" onchange="onPaymentChange()" class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-emerald-950 focus:outline-none focus:border-emerald-500">
+                        <option value="qr">โอนเงินผ่าน PromptPay</option>
+                        <option value="cash">ชำระด้วยเงินสดตอนรับสินค้า</option>
+                    </select>
+                </div>
+
+                <!-- พร้อมเพย์ & แจ้งสลิป LINE (จะแสดงเฉพาะตอนเลือก PromptPay) -->
+                <div id="qr-section" class="space-y-2.5 bg-gradient-to-br from-emerald-50/50 to-teal-50/50 p-4 rounded-2xl border border-emerald-200 text-center">
                     <div class="flex justify-between items-center text-xs font-bold text-emerald-950">
                         <span>💳 ชำระผ่าน PromptPay</span>
-                        <span class="text-emerald-700 text-sm font-extrabold">฿<span id="qr-price">45</span></span>
+                        <span class="text-emerald-700 text-sm font-extrabold">฿<span id="qr-price">0</span></span>
                     </div>
 
                     <div class="bg-white p-3.5 rounded-xl border border-emerald-100 shadow-sm space-y-2 text-center">
@@ -187,7 +196,7 @@
                     </div>
 
                     <div class="space-y-1 text-left mt-2">
-                        <label class="block text-[11px] font-bold text-zinc-600">แนบรูปสลิปหลักฐานโอนเงิน</label>
+                        <label class="block text-[11px] font-bold text-zinc-600">แนบรูปสลิปหลักฐานโอนเงิน <span class="text-zinc-400 font-normal">(ถ้ามี)</span></label>
                         <input type="file" id="slipFile" accept="image/*" class="w-full text-xs text-zinc-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-emerald-600 file:text-white hover:file:bg-emerald-500 cursor-pointer bg-white border border-zinc-200 rounded-xl p-1 shadow-sm">
                     </div>
                 </div>
@@ -196,7 +205,7 @@
                 <div class="pt-2 border-t border-zinc-100 space-y-2">
                     <div class="flex justify-between items-center text-sm font-bold text-emerald-950 pt-1">
                         <span>ยอดรวมสุทธิ:</span>
-                        <span id="summary-total-price" class="text-emerald-700 text-base font-extrabold">฿45</span>
+                        <span id="summary-total-price" class="text-emerald-700 text-base font-extrabold">฿0</span>
                     </div>
 
                     <button id="submit-btn" onclick="submitOrder()" class="w-full py-3.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-lime-500 hover:from-emerald-600 hover:to-lime-600 text-white font-extrabold rounded-xl shadow-lg transition-all text-xs tracking-wide scale-100 hover:scale-[1.01]">
@@ -216,7 +225,7 @@
             </div>
             <div class="space-y-1">
                 <h3 class="text-lg font-bold text-emerald-950">Thank You!</h3>
-                <p class="text-xs text-zinc-500">ขอบคุณที่สนับสนุนมัทฉะของเรา กรุณาส่งสลิปยืนยันทาง LINE <b>@107widix</b> (รับส่วนลด 5 บาท) ทางเราจะรีบตรวจสอบครับ 🎉</p>
+                <p id="thankyou-desc" class="text-xs text-zinc-500">ขอบคุณที่สนับสนุนมัทฉะของเรา กรุณาส่งสลิปยืนยันทาง LINE <b>@107widix</b> ทางเราจะรีบตรวจสอบครับ 🎉</p>
             </div>
             <button onclick="closeThankYouModal()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl transition-all shadow-sm">
                 ตกลง / ดูรายการออเดอร์
@@ -262,9 +271,8 @@
             sweetness: "0%"
         };
 
-        let currentCart = [
-            { name: "Matcha Latte (มัทฉะลาเต้)", price: 45, sweetness: "0%" }
-        ];
+        // แก้ไขให้ตะกร้าเริ่มต้นว่างเปล่า (เป็นค่าว่าง [])
+        let currentCart = [];
 
         let orders = [];
         let isAdminMode = false;
@@ -353,10 +361,6 @@
         }
 
         function removeFromCart(index) {
-            if (currentCart.length === 1) {
-                showToast("⚠️ ต้องมีสินค้าอย่างน้อย 1 รายการในออเดอร์");
-                return;
-            }
             currentCart.splice(index, 1);
             renderCart();
             showToast("🗑️ ลบรายการออกแล้ว");
@@ -368,21 +372,35 @@
 
             let totalPrice = 0;
 
-            container.innerHTML = currentCart.map((item, idx) => {
-                totalPrice += item.price;
-                return `
-                    <div class="bg-zinc-50 border border-zinc-200 p-3 rounded-xl flex justify-between items-center text-xs">
-                        <div>
-                            <span class="font-bold text-emerald-950">${idx + 1}. ${item.name}</span>
-                            <div class="text-[11px] text-emerald-700 font-bold">ความหวาน ${item.sweetness} | ฿${item.price}</div>
+            if (currentCart.length === 0) {
+                container.innerHTML = `<div class="text-center py-4 text-zinc-400 text-xs">ยังไม่มีสินค้าในตะกร้า</div>`;
+            } else {
+                container.innerHTML = currentCart.map((item, idx) => {
+                    totalPrice += item.price;
+                    return `
+                        <div class="bg-zinc-50 border border-zinc-200 p-3 rounded-xl flex justify-between items-center text-xs">
+                            <div>
+                                <span class="font-bold text-emerald-950">${idx + 1}. ${item.name}</span>
+                                <div class="text-[11px] text-emerald-700 font-bold">ความหวาน ${item.sweetness} | ฿${item.price}</div>
+                            </div>
+                            <button type="button" onclick="removeFromCart(${idx})" class="text-red-500 hover:text-red-700 font-bold px-2.5 py-1 bg-red-50 rounded-lg text-[10px] border border-red-100">ลบ</button>
                         </div>
-                        <button type="button" onclick="removeFromCart(${idx})" class="text-red-500 hover:text-red-700 font-bold px-2.5 py-1 bg-red-50 rounded-lg text-[10px] border border-red-100">ลบ</button>
-                    </div>
-                `;
-            }).join('');
+                    `;
+                }).join('');
+            }
 
             document.getElementById('summary-total-price').textContent = `฿${totalPrice}`;
             document.getElementById('qr-price').textContent = totalPrice;
+        }
+
+        function onPaymentChange() {
+            const method = document.getElementById('paymentMethod').value;
+            const qrSection = document.getElementById('qr-section');
+            if (method === 'qr') {
+                qrSection.classList.remove('hidden');
+            } else {
+                qrSection.classList.add('hidden');
+            }
         }
 
         function onDayChange() {
@@ -487,8 +505,14 @@
         function submitOrder() {
             const address = document.getElementById('customerAddress').value.trim();
             const timeSlot = document.getElementById('timeSlotSelect').value;
+            const paymentMethod = document.getElementById('paymentMethod').value;
             const slipFile = document.getElementById('slipFile').files[0];
             const dayText = document.getElementById('deliveryDay').selectedOptions[0].text;
+
+            if (currentCart.length === 0) {
+                showToast("⚠️ กรุณาเลือกสินค้าอย่างน้อย 1 แก้ว");
+                return;
+            }
 
             if (!address) {
                 showToast("⚠️ กรุณากรอกที่อยู่และเบอร์โทรศัพท์");
@@ -500,12 +524,11 @@
                 return;
             }
 
-            if (!slipFile) {
-                showToast("⚠️ กรุณาแนบรูปสลิปหลักฐานการโอนเงิน");
-                return;
+            let slipUrl = "";
+            if (paymentMethod === 'qr' && slipFile) {
+                slipUrl = URL.createObjectURL(slipFile);
             }
 
-            const slipUrl = URL.createObjectURL(slipFile);
             let totalAmount = currentCart.reduce((sum, item) => sum + item.price, 0);
 
             const newOrder = {
@@ -515,6 +538,7 @@
                 day: dayText,
                 timeSlot: timeSlot,
                 address: address,
+                payment: paymentMethod === 'qr' ? 'โอนผ่าน PromptPay' : 'ชำระเงินสด',
                 slip: slipUrl,
                 time: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })
             };
@@ -528,8 +552,17 @@
             document.getElementById('customerAddress').value = '';
             document.getElementById('slipFile').value = '';
             
-            currentCart = [{ name: "Matcha Latte (มัทฉะลาเต้)", price: 45, sweetness: "0%" }];
+            // ล้างตะกร้าให้เป็นค่าว่างหลังสั่งซื้อสำเร็จ
+            currentCart = [];
             renderCart();
+
+            // ปรับข้อความในป๊อปอัพขอบคุณตามวิธีชำระเงิน
+            const thankyouDesc = document.getElementById('thankyou-desc');
+            if (paymentMethod === 'qr') {
+                thankyouDesc.innerHTML = `ขอบคุณที่สนับสนุนมัทฉะของเรา กรุณาส่งสลิปยืนยันทาง LINE <b>@107widix</b> ทางเราจะรีบตรวจสอบครับ 🎉`;
+            } else {
+                thankyouDesc.innerHTML = `ขอบคุณที่สนับสนุนมัทฉะของเรา (เลือกชำระด้วยเงินสด) ทางเราจะจัดเตรียมออเดอร์ตามรอบเวลาครับ 🎉`;
+            }
 
             openThankYouModal();
         }
@@ -597,12 +630,15 @@
                         </ul>
                         <div class="pt-1"><strong>รอบส่ง:</strong> ${ord.day} (เวลา ${ord.timeSlot})</div>
                         <div><strong>ที่อยู่:</strong> ${ord.address}</div>
-                        <div class="pt-1">
-                            <strong>สลิปโอนเงินที่ลูกค้าแนบ:</strong><br>
-                            <a href="${ord.slip}" target="_blank" class="inline-block mt-1">
-                                <img src="${ord.slip}" alt="สลิปโอนเงิน" class="w-20 h-20 object-cover rounded-xl border border-zinc-300 hover:opacity-80 transition-all shadow-sm">
-                            </a>
-                        </div>
+                        <div><strong>การชำระเงิน:</strong> <span class="text-emerald-700 font-bold">${ord.payment}</span></div>
+                        ${ord.slip ? `
+                            <div class="pt-1">
+                                <strong>สลิปโอนเงินที่ลูกค้าแนบ:</strong><br>
+                                <a href="${ord.slip}" target="_blank" class="inline-block mt-1">
+                                    <img src="${ord.slip}" alt="สลิปโอนเงิน" class="w-20 h-20 object-cover rounded-xl border border-zinc-300 hover:opacity-80 transition-all shadow-sm">
+                                </a>
+                            </div>
+                        ` : ''}
                     </div>
                 </div>
             `).join('');
